@@ -1,0 +1,14 @@
+<h2>식당 리스트</h2>
+{% if restaurant_list %}
+    <ul>
+        {% for restaurant in restaurant_list %}
+        <li><a href="{% url 'restaurant' school.id=school.id restaurant.id=restaurant.id %}">
+            {{ restaurant.name }}
+        </a>
+        </li>
+        {% endfor%}
+    </ul>
+{% else %}
+    <p> no school </p>
+{% endif %}
+
