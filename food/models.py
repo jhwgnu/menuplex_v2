@@ -15,6 +15,23 @@ class School(models.Model):
     def __str__(self):
         return self.name
 
+    @classmethod
+    def detail_list(cls,school_id):
+        restaurant_list = Restaurant.objects.filter(school_id=school_id)
+        meal_list = Meal.objects.filter(school_id=school_id).filter(meal_date=datetime.now())
+
+        grouped_rest=dict()
+        for obj in meal_list.all():
+            name = restaurant_list.get(pk=obj.restaurant_id).name
+            grouped_rest.setdefault((name,obj.time),[]).append(obj)
+
+        grouped_time = dict()
+        for key, value in grouped_rest.items():
+            name = key[0]
+            grouped_time.setdefault(name,[]).append((key[1],value))
+
+        restaurant_dict = grouped_time.items()
+        return restaurant_dict
 
 class Restaurant(models.Model):
     school = models.ForeignKey(School,on_delete =models.CASCADE)
@@ -70,7 +87,7 @@ class Meal(models.Model):
         # 크롤링을 했을 경우 동작하지 않도록함
         if not Meal.objects.filter(school=snu).filter(meal_date = datetime.now()):
             # 직영식당 크롤링
-            html = urllib.request.urlopen("http://www.snuco.com/html/restaurant/restaurant_menu1.asp?date="+today.strftime("%Y-%m-%d"))
+            html = urllib.req0uest.urlopen("http://www.snuco.com/html/restaurant/restaurant_menu1.asp?date="+today.strftime("%Y-%m-%d"))
             crawl_SNU_html(html)
             # 위탁식당 크롤링
             html = urllib.request.urlopen("http://www.snuco.com/html/restaurant/restaurant_menu2.asp?date="+today.strftime("%Y-%m-%d"))

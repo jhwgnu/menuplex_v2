@@ -39,6 +39,9 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     #third-party APPS
     'django_extensions',
+    'django_crontab',
+    'debug_toolbar',
+    #local APPS
     'food',
 )
 
@@ -51,6 +54,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = 'menuplex_Ver_sj.urls'
@@ -103,3 +107,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+
+CRONJOBS = [
+    ('30 02***','food.cron.scheduled_job'),
+]
+# 스케쥴 작업
+# 작업 추가 : python manage.py crontab add
+# 작업 목록 보기 : python manage.py crontab show
+# 작업 삭제 : python manage.py crontab remove
+

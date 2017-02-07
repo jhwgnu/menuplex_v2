@@ -9,32 +9,17 @@ def index(request):
 
     return render(request, 'food/index.html',context)
 
-
 def detail(request,school_id):
-    # 오늘날짜의 식사만을 가져옴
-    restaurant_list = Restaurant.objects.filter(school_id=school_id)
-    #.filter(meal_date=datetime.now())
-    meal_list = Meal.objects.filter(school_id=1).filter(meal_date=datetime.now())
+    # "레스토랑 이름 - 식사 시간 - 식사 이름" 으로 만들어줌.
+    restaurant_dict = School.detail_list(school_id)
 
-    grouped_rest=dict()
-    for obj in meal_list.all():
-        name = restaurant_list.get(pk=obj.restaurant_id).name
-        grouped_rest.setdefault((name,obj.time),[]).append(obj)
-
-    grouped_time = dict()
-    for key, value in grouped_rest.items():
-        name = key[0]
-        grouped_time.setdefault(name,[]).append((key[1],value))
-
-    restaurant_dict = (grouped_time.items())
-
-    context = {'restaurant_dict' : restaurant_dict}
+    context = {'school_id':school_id,'restaurant_dict' : restaurant_dict}
 
     return render(request,'food/detail.html',context)
 
 
-def restaurant_detail(request,school_id,restaurant_id):
-    restaurant = Restaurant.objects.get(pk = restaurant_id)
+def restaurant_detail(request,school_id,restaurant_name):
+    restaurant = Restaurant.objects.get(name = restaurant_name)
     context = {'restaurant' : restaurant}
 
     return render(request,'food/detail_restaurant.html',context)
