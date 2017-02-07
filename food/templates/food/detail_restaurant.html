@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>식당 설명</h2>
+{% if restaurant %}
+<ul>
+    식당 이름 : {{restaurant.name}} <br>
+    식당 위치 : {{restaurant.location}}
+</ul>
+{% else %}
+    <p> no restaurant description </p>
+{% endif %}
+{% endblock%}

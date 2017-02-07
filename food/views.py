@@ -19,6 +19,7 @@ def detail(request,school_id):
 def restaurant_detail(request,school_id,restaurant_id):
     restaurant = Restaurant.objects.get(pk = restaurant_id)
     context = {'restaurant' : restaurant}
+
     return render(request,'food/detail_restaurant.html',context)
 
 

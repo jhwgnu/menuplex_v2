@@ -1,3 +1,6 @@
+{% extends "layout.html" %}
+
+{% block content %}
 <h2>학교 리스트</h2>
 {% if school_list %}
     <ul>
@@ -14,3 +17,4 @@
     <p> no school </p>
 {% endif %}
 
+{% endblock %}
