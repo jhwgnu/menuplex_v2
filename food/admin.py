@@ -14,10 +14,14 @@ class RestaurantAdmin(admin.ModelAdmin):
 
 
 class MealAdmin(admin.ModelAdmin):
-    list_display = ['id','name','time','meal_date','price','restaurant','school']
+    list_display = ['id','name','time','meal_date','restaurant','school']
     list_display_links = ['id','name']
     search_fields = ['name']
 
+    def delete_model(self,request,obj):
+        for o in obj.all():
+            o.delete()
+    delete_model.short_description = 'Delete flow'
 
 admin.site.register(School, SchoolAdmin)
 admin.site.register(Restaurant,RestaurantAdmin)
