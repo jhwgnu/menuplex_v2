@@ -144,4 +144,173 @@ class Meal(models.Model):
                         else : # 메뉴가 1개인 식당
                             cls.objects.create(school = ku , restaurant = rest, name = menu.next.string , time = "lunch", meal_date = t_date)
 
+    # 한양대 대상으로 한 크롤러
+    @classmethod
+    def crawl_HYU(cls):
+        hyu =  School.objects.get(name="한양대")
+        today = datetime.now()
+        # url 별로 식당이 잡혀 있기 때문에 새로히 메소드 정의해줌
+        def crawl_HYU_url(url,rest) :
+            html = requests.get(url).text
+            soup = BeautifulSoup(html, 'html.parser')
+            table = soup.find('tbody').find_next('tbody')
 
+            flour_food = "" # 분식은 일단 중식으로 넣자
+            breakfast = ""
+            lunch = ""
+            dinner = ""
+
+            try:
+                tr = table.find('tr')
+                td = tr.find('td').find_next('td')
+                ul = td.find('ul')
+                li = ul.find_all('li')
+
+                for li_tag in li:
+                    if len(li_tag) > 0:
+                        if flour_food == "":
+                            flour_food = li_tag.string
+                            cls.objects.create(school=hyu,restaurant=rest, name = li_tag.string,time="lunch",meal_date=today)
+                        else:
+                            flour_food += (", "+li_tag.string)
+                            cls.objects.create(school=hyu,restaurant=rest, name = li_tag.string,time="lunch",meal_date=today)
+
+            except AttributeError:
+                pass
+            except IndexError:
+                pass
+
+            try:
+                tr = table.find('tr').find_next('tr')
+                td = tr.find('td').find_next('td')
+                ul = td.find('ul')
+                li = ul.find_all('li')
+
+                for li_tag in li:
+                    if len(li_tag) > 0:
+                        if breakfast == "":
+                            breakfast = li_tag.string
+                            cls.objects.create(school=hyu,restaurant=rest, name = li_tag.string,time="morning",meal_date=today)
+                        else:
+                            breakfast += (", "+li_tag.string)
+                            cls.objects.create(school=hyu,restaurant=rest, name = li_tag.string,time="morning",meal_date=today)
+            except AttributeError:
+                pass
+            except IndexError:
+                pass
+
+            try:
+                tr = table.find('tr').find_next('tr').find_next('tr')
+                td = tr.find('td').find_next('td')
+                ul = td.find('ul')
+                li = ul.find_all('li')
+
+                for li_tag in li:
+                    if len(li_tag) > 0:
+                        if lunch == "":
+                            lunch = li_tag.string
+                        else:
+                            lunch += (", "+li_tag.string)
+            except AttributeError:
+                pass
+            except IndexError:
+                pass
+
+            try:
+                tr = table.find('tr').find_next('tr').find_next('tr').find_next('tr')
+                td = tr.find('td').find_next('td')
+                ul = td.find('ul')
+                li = ul.find_all('li')
+
+                for li_tag in li:
+                    if len(li_tag) > 0:
+                        if breakfast == "":
+                            breakfast = li_tag.string
+                            cls.objects.create(school=hyu,restaurant=rest, name = li_tag.string,time="morning",meal_date=today)
+                        else:
+                            breakfast += (", "+li_tag.string)
+                            cls.objects.create(school=hyu,restaurant=rest, name = li_tag.string,time="morning",meal_date=today)
+                        if lunch == "":
+                            lunch = li_tag.string
+                            cls.objects.create(school=hyu,restaurant=rest, name = li_tag.string,time="lunch",meal_date=today)
+                        else:
+                            lunch += (", "+li_tag.string)
+                            cls.objects.create(school=hyu,restaurant=rest, name = li_tag.string,time="lunch",meal_date=today)
+            except AttributeError:
+                pass
+            except IndexError:
+                pass
+
+            try:
+                tr = table.find('tr').find_next('tr').find_next('tr').find_next('tr').find_next('tr')
+                td = tr.find('td').find_next('td')
+                ul = td.find('ul')
+                li = ul.find_all('li')
+
+                for li_tag in li:
+                    if len(li_tag) > 0:
+                        if dinner == "":
+                            dinner = li_tag.string
+                            cls.objects.create(school=hyu,restaurant=rest, name = li_tag.string,time="dinner",meal_date=today)
+                        else:
+                            dinner += (", "+li_tag.string)
+                            cls.objects.create(school=hyu,restaurant=rest, name = li_tag.string,time="dinner",meal_date=today)
+            except AttributeError:
+                pass
+            except IndexError:
+                pass
+
+            try:
+                tr = table.find('tr').find_next('tr').find_next('tr').find_next('tr').find_next('tr').find_next('tr')
+                td = tr.find('td').find_next('td')
+                ul = td.find('ul')
+                li = ul.find_all('li')
+
+                for li_tag in li:
+                    if len(li_tag) > 0:
+                        if lunch == "":
+                            lunch = li_tag.string
+                            cls.objects.create(school=hyu,restaurant=rest, name = li_tag.string,time="lunch",meal_date=today)
+                        else:
+                            lunch += (", "+li_tag.string)
+                            cls.objects.create(school=hyu,restaurant=rest, name = li_tag.string,time="lunch",meal_date=today)
+                        if dinner == "":
+                            dinner = li_tag.string
+                            cls.objects.create(school=hyu,restaurant=rest, name = li_tag.string,time="dinner",meal_date=today)
+                        else:
+                            dinner += (", "+li_tag.string)
+                            cls.objects.create(school=hyu,restaurant=rest, name = li_tag.string,time="dinner",meal_date=today)
+            except AttributeError:
+                pass
+            except IndexError:
+                pass
+
+        # 이미 그 날자의 크롤링이 존재하는 경우, 동작하지 않도록함
+        if not Meal.objects.filter(school=hyu).filter(meal_date = datetime.now()):
+            #학생 식당
+            rest = Restaurant.objects.get(name = "학생식당")
+            crawl_HYU_url("http://www.hanyang.ac.kr/web/www/-248#none",rest)
+
+            #교직원 식당
+            rest = Restaurant.objects.get(name = "교직원식당")
+            crawl_HYU_url("http://www.hanyang.ac.kr/web/www/-249#none",rest)
+
+            #사랑방
+            rest = Restaurant.objects.get(name = "사랑방")
+            crawl_HYU_url("http://www.hanyang.ac.kr/web/www/-250#none",rest)
+
+            #신교직원식당
+            rest = Restaurant.objects.get(name = "신교직원식당")
+            crawl_HYU_url("http://www.hanyang.ac.kr/web/www/-251#none",rest)
+
+            #신학생식당
+            rest = Restaurant.objects.get(name = "신학생식당")
+            crawl_HYU_url("http://www.hanyang.ac.kr/web/www/-252#none",rest)
+
+            #제2생활관 식당
+            rest = Restaurant.objects.get(name = "제2생활관식당")
+            crawl_HYU_url("http://www.hanyang.ac.kr/web/www/-2-#none",rest)
+
+            #행원파크
+            rest = Restaurant.objects.get(name = "행원파크")
+            crawl_HYU_url("http://www.hanyang.ac.kr/web/www/-253#none",rest)
