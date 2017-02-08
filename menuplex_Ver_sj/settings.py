@@ -116,3 +116,6 @@ CRONJOBS = [
 # 작업 목록 보기 : python manage.py crontab show
 # 작업 삭제 : python manage.py crontab remove
 
+ALLOWED_HOSTS = ['*']
+
+INTERNAL_IPS = ['127.0.0.1']

@@ -1,6 +1,9 @@
 from django.contrib import admin
 from food.models import School,Restaurant,Meal
 
+## admin 페이지에 크롤링 버튼을 만들고자 함
+## 방법을 아직 모르겠음.
+
 class SchoolAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'school_url']
     list_display_links = ['id','name']
