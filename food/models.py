@@ -58,6 +58,17 @@ class Meal(models.Model):
     def __str__(self):
         return self.name
 
+    # 학교 별로 묶어놓은 크롤러
+    # admin에서 이용하기 위함
+    @classmethod
+    def crawl_SCHOOL(cls, queryset):
+        for query in queryset :
+            if (query == School.objects.get(name="서울대")) :
+                cls.crawl_SNU()
+            elif (query == School.objects.get(name="고려대")) :
+                cls.crawl_KU()
+            elif (query == School.objects.get(name="한양대")) :
+                cls.crawl_HYU()
 
     # 서울대 대상한 크롤러
     # 식당이 없었을 경우, 식당의 정보를 입력해주는 크롤러 제작 필요
@@ -92,7 +103,7 @@ class Meal(models.Model):
         # 크롤링을 했을 경우 동작하지 않도록함
         if not Meal.objects.filter(school=snu).filter(meal_date = datetime.now()):
             # 직영식당 크롤링
-            html = urllib.req0uest.urlopen("http://www.snuco.com/html/restaurant/restaurant_menu1.asp?date="+today.strftime("%Y-%m-%d"))
+            html = urllib.request.urlopen("http://www.snuco.com/html/restaurant/restaurant_menu1.asp?date="+today.strftime("%Y-%m-%d"))
             crawl_SNU_html(html)
             # 위탁식당 크롤링
             html = urllib.request.urlopen("http://www.snuco.com/html/restaurant/restaurant_menu2.asp?date="+today.strftime("%Y-%m-%d"))

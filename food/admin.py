@@ -8,6 +8,13 @@ class SchoolAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'school_url']
     list_display_links = ['id','name']
     search_fields = ['name']
+    actions = ['crawl']
+
+    def crawl(self, request, queryset):
+        Meal.crawl_SCHOOL(queryset)
+        self.message_user(request, '수행!!')
+        pass
+    crawl.short_description = '지정 학교를 크롤링합니다.'
 
 
 class RestaurantAdmin(admin.ModelAdmin):
@@ -29,3 +36,4 @@ class MealAdmin(admin.ModelAdmin):
 admin.site.register(School, SchoolAdmin)
 admin.site.register(Restaurant,RestaurantAdmin)
 admin.site.register(Meal, MealAdmin)
+
