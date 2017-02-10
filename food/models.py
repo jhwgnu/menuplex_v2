@@ -1,4 +1,4 @@
-import requests, urllib.request
+import requests, urllib.request, collections, functools
 from bs4 import BeautifulSoup
 from django.db import models
 from datetime import datetime
@@ -8,16 +8,32 @@ TIME_CHOICES = (
     ('dinner' , '석식'),
 )
 
+#날짜를 기준으로 동일 날짜에 한번 연산을 햇으면
+# 메모아이징 시켜서 또 연산 하는 것을 방지해줌
+def memoize(f):
+    memo = {}
+    def helper(cls,x):
+        t = datetime.today().day
+        if (x,t) not in memo:
+            print("don't have")
+            for m in memo.keys() :
+                print(m)
+            memo[(x,t)] = f(cls,x)
+        return memo[(x,t)]
+    return helper
+
+
 class School(models.Model):
     name = models.CharField(max_length=100)
     school_url = models.URLField(max_length=200)
+    shortname = models.CharField(max_length=10)
 
     def __str__(self):
         return self.name
 
     # views.py에서 레스토랑의 이름 - 시간 - 식사 이름 을 출력해주는 창.
-    # cashing을 이용해서 한번 계산하면 저장해버리고, 다음 호출 시 걍 줄 수 있도록 하자.
     @classmethod
+    @memoize
     def detail_list(cls,school_id):
         restaurant_list = Restaurant.objects.filter(school_id=school_id)
         meal_list = Meal.objects.filter(school_id=school_id).filter(meal_date=datetime.now())
@@ -34,6 +50,7 @@ class School(models.Model):
 
         restaurant_dict = grouped_time.items()
         return restaurant_dict
+
 
 class Restaurant(models.Model):
     school = models.ForeignKey(School,on_delete =models.CASCADE)

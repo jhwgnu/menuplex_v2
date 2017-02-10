@@ -39,7 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     #third-party APPS
     'django_extensions',
-    'django_crontab',
+    # 'django_crontab',
     'debug_toolbar',
     #local APPS
     'food',
