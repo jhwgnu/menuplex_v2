@@ -1,7 +1,38 @@
 {% extends "layout.html" %}
 
 {% block content %}
-
+<html>
+  <head>
+    <style>
+       #map {
+        height: 50px;
+        width: 50%;
+       }
+    </style>
+  </head>
+  <body>
+    <h3>My Google Maps Demo</h3>
+    <div id="map"></div>
+    <script>
+      function initMap() {
+        var uluru = {lat: 37.45886, lng: 126.95};
+        // var uluru2 = {lat: 37.462342, lng: 127.0017349};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 14,
+          center: uluru
+        });
+        var marker = new google.maps.Marker({
+          position: uluru,
+          // position: uluru2,
+          map: map
+        });
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJG-bVA-9JCqT9FVFoYz5OWRfRr0g9LhQ&callback=initMap">
+    </script>
+  </body>
+</html>
 <h2>식당 리스트</h2>
 {% if restaurant_dict %}
     <ul>
