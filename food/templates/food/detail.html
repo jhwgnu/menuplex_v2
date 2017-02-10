@@ -7,7 +7,7 @@
     <ul>
         {% for restaurant in restaurant_dict %}
         <li>
-            {{restaurant.0}}
+            <a href="{% url 'restaurant' school.shortname restaurant.0 %}">{{restaurant.0}}</a>
             <ol>
                 {% for meals in restaurant.1 %}
                 <li>
@@ -32,3 +32,4 @@
 {% endif %}
 
 {% endblock %}
+-

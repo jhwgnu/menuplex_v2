@@ -1,4 +1,5 @@
 import requests, urllib.request, collections, functools
+from django.core.urlresolvers import reverse
 from bs4 import BeautifulSoup
 from django.db import models
 from datetime import datetime
@@ -63,6 +64,9 @@ class Restaurant(models.Model):
     @staticmethod
     def printss():
         print("qwe")
+
+    def get_absolute_url(self):
+        return reverse("food:restaurant", args=[self.school.shortname, self.name])
 
 
 class Meal(models.Model):
