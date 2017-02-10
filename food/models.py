@@ -26,6 +26,7 @@ def memoize(f):
 class School(models.Model):
     name = models.CharField(max_length=100)
     school_url = models.URLField(max_length=200)
+    shortname = models.CharField(max_length=10)
 
     def __str__(self):
         return self.name
