@@ -1,7 +1,40 @@
+<html>
 {% extends "layout.html" %}
 
 {% block content %}
+<!DOCTYPE html>
+
+  <head>
+    <style>
+       #map {
+        height: 400px;
+        width: 100%;
+       }
+    </style>
+  </head>
+  <body>
+    <h3>My Google Maps Demo</h3>
+    <div id="map"></div>
+    <script>
+      function initMap() {
+        var uluru = {lat: 37.45886, lng: 126.95};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 14,
+          center: uluru
+        });
+        var marker = new google.maps.Marker({
+          position: uluru,
+          map: map
+        });
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJG-bVA-9JCqT9FVFoYz5OWRfRr0g9LhQ&callback=initMap">
+    </script>
+  </body>
+
 <h2>학교 리스트</h2>
+
 {% if school_list %}
     <ul>
         {% for school in school_list %}
@@ -18,3 +51,4 @@
 {% endif %}
 
 {% endblock %}
+</html>
