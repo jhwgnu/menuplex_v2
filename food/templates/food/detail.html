@@ -33,6 +33,13 @@
     </script>
   </body>
 </html>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <!--버튼용 -->
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 <h2>식당 리스트</h2>
 {% if restaurant_dict %}
     <ul>
@@ -46,7 +53,7 @@
                     <ul>
                         {% for meal in meals.1 %}
                         <li>
-                            {{meal}}
+                            {{meal}} <input type="checkbox"  checked data-toggle="toggle" id="toggle {{meal.pk}}" name='toggle' data-on="판매중" data-off="매진">
                         </li>
                         {% endfor %}
                     </ul>
@@ -58,6 +65,13 @@
         </li>
         {% endfor%}
     </ul>
+    <script>
+    $(function() {
+      $('input[name=toggle]').change(function() {
+        alert("판매상태가 바뀝니다.");
+      })
+    });
+    </script>
 {% else %}
     <p> 밥이 엄서요 </p>
 {% endif %}
