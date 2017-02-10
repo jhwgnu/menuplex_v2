@@ -9,11 +9,11 @@ def index(request):
 
     return render(request, 'food/index.html',context)
 
-def detail(request,school_id):
+def detail(request,shortname):
     # "레스토랑 이름 - 식사 시간 - 식사 이름" 으로 만들어줌.
-    restaurant_dict = School.detail_list(school_id)
-
-    context = {'school_id':school_id,'restaurant_dict' : restaurant_dict}
+    school = School.objects.get(shortname=shortname)
+    restaurant_dict = School.detail_list(school.id)
+    context = {'restaurant_dict' : restaurant_dict}
 
     return render(request,'food/detail.html',context)
 
@@ -23,5 +23,3 @@ def restaurant_detail(request,school_id,restaurant_name):
     context = {'restaurant' : restaurant}
 
     return render(request,'food/detail_restaurant.html',context)
-
-

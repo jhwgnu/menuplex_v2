@@ -5,7 +5,7 @@
 {% if school_list %}
     <ul>
         {% for school in school_list %}
-        <li><a href="{% url 'detail' school.id %}">
+        <li><a href="{% url 'detail' school.shortname %}">
             {{ school.name }}
         </a>
         <br>
