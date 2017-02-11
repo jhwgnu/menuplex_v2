@@ -5,3 +5,5 @@ from food.models import School, Restaurant, Meal
 
 def scheduled_job():
     Meal.crawl_SNU()
+    Meal.crawl_KU()
+    Meal.crawl_HYU()
