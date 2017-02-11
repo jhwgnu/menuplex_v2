@@ -11,7 +11,7 @@ class SignupForm(UserCreationForm):
 
 
     class Meta(UserCreationForm.Meta):
-        fields = UserCreationForm.Meta.fields + ('email', 'first_name', 'last_name')
+        fields = UserCreationForm.Meta.fields + ('first_name', 'last_name')
 
     def save(self):
         user = super().save()
