@@ -23,3 +23,10 @@ def restaurant_detail(request,shortname,restaurant_name):
     context = {'restaurant' : restaurant}
 
     return render(request,'food/detail_restaurant.html',context)
+
+def history(request,shortname):
+    meal = request.GET['meal']
+    meal_history = Meal.history(meal)
+    template = loader.get_template('food/history.html')
+
+    return TemplateResponse(request,template,{'meal_history':meal_history})
