@@ -68,6 +68,11 @@ class Restaurant(models.Model):
     def get_absolute_url(self):
         return reverse("food:restaurant", args=[self.school.shortname, self.name])
 
+class Comment(models.Model):
+    restaurant = models.ForeignKey(Restaurant)
+    author = models.CharField(max_length = 10, blank = False)
+    message= models.TextField(blank = False)
+
 
 class Meal(models.Model):
     school = models.ForeignKey(School,on_delete =models.CASCADE)
