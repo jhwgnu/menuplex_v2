@@ -4,8 +4,9 @@ from django.conf import settings
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^',include("food.urls")),
     url(r'^accounts/', include('accounts.urls')),
+    url(r'^',include("food.urls")),
+
 ]
 
 if settings.DEBUG:
