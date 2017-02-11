@@ -52,9 +52,14 @@
                     {{meals.0}}
                     <ul>
                         {% for meal in meals.1 %}
-                        <li>
-                            {{meal}} <input type="checkbox"  checked data-toggle="toggle" id="toggle {{meal.pk}}" name='toggle' data-on="판매중" data-off="매진">
+                        <li class = 'meal' id='{{meal.id}}'>
+                            {{meal}}
                         </li>
+                        <table>
+                        <form action="" method="get">
+                        <table>{{ form.as_table }}</table>
+                        </form>
+                        </table>
                         {% endfor %}
                     </ul>
                 </li>
@@ -65,16 +70,39 @@
         </li>
         {% endfor%}
     </ul>
-    <script>
-    $(function() {
-      $('input[name=toggle]').change(function() {
-        alert("판매상태가 바뀝니다.");
-      })
-    });
-    </script>
 {% else %}
     <p> 밥이 엄서요 </p>
 {% endif %}
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('.meal').click(function(){
+            var t = $(this)[0];
+            var tstr = 'target' + t.id;
+            var target = '#'+tstr;
+            if ($(target).length==0){
+                $.ajax({
+                url : 'history/',
+                type: 'GET',
+                data : {'meal':t.id},
+                success:function(data){
+                    var p = document.createElement('div');
+                    p.innerHTML = data;
+                    p.setAttribute('style','display: none');
+                    p.setAttribute('id',tstr);
+                    t.append(p);
+                    $(target).slideDown("slow");
+                }
+                });
+            } else {
+                if ($(target).attr("style") == 'display: none;') {
+                    $(target).slideDown("slow");
+                } else {
+                    $(target).slideUp("slow");
+                }
+            }
+        });
+    });
+</script>
 {% endblock %}
 -

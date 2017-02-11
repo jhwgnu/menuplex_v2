@@ -1,0 +1,7 @@
+
+<p>history</p>
+{% if meal_history %}
+    {% for meal in meal_history %}
+        <p>최근 나온 날짜 :  {{meal.meal_date}}</p>
+    {% endfor %}
+{% endif %}

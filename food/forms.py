@@ -1,5 +1,6 @@
 from django import forms
-from food.models import Comment
+
+from food.models import Comment, Meal
 
 
 class CommentForm(forms.ModelForm):
@@ -23,4 +24,7 @@ class CommentForm(forms.ModelForm):
         cleaned_data = super().clean()
         return cleaned_data
 
-
+class SoldOutForm(forms.ModelForm):
+    class Meta:
+        model = Meal
+        fields = ['soldout']

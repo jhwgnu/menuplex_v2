@@ -16,13 +16,18 @@ def memoize(f):
     def helper(cls,x):
         t = datetime.today().day
         if (x,t) not in memo:
-            print("don't have")
-            for m in memo.keys() :
-                print(m)
             memo[(x,t)] = f(cls,x)
         return memo[(x,t)]
     return helper
 
+def memoize1(f):
+    memo = {}
+    def helper(x):
+        t = datetime.today().day
+        if (x,t) not in memo:
+            memo[(x,t)] = f(x)
+        return memo[(x,t)]
+    return helper
 
 class School(models.Model):
     name = models.CharField(max_length=100)
@@ -61,10 +66,6 @@ class Restaurant(models.Model):
     def __str__(self):
         return self.name
 
-    @staticmethod
-    def printss():
-        print("qwe")
-
     def get_absolute_url(self):
         return reverse("food:restaurant", args=[self.school.shortname, self.name])
 
@@ -80,9 +81,15 @@ class Meal(models.Model):
     name = models.CharField(max_length=100)
     time = models.CharField(max_length=10,choices =TIME_CHOICES,default='lunch',)
     meal_date = models.DateField()
-
+    soldout = models.BooleanField(default=False)
     def __str__(self):
         return self.name
+    # 메뉴의 히스토리를 가져오는 것
+    # 같은 식당에 한에서만 가져와야 함.
+    @memoize1
+    def history(meal_id):
+        h_meal = Meal.objects.get(pk=meal_id)
+        return Meal.objects.filter(name = h_meal.name).filter(restaurant = h_meal.restaurant).filter(time = h_meal.time)
 
     # 학교 별로 묶어놓은 크롤러
     # admin에서 이용하기 위함
