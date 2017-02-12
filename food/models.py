@@ -3,6 +3,9 @@ from django.core.urlresolvers import reverse
 from bs4 import BeautifulSoup
 from django.db import models
 from datetime import datetime
+from django.core.validators import MinLengthValidator
+
+
 TIME_CHOICES = (
     ('morning', '조식'),
     ('lunch'  , '중식'),
@@ -69,10 +72,26 @@ class Restaurant(models.Model):
     def get_absolute_url(self):
         return reverse("food:restaurant", args=[self.school.shortname, self.name])
 
-class Comment(models.Model):
-    restaurant = models.ForeignKey(Restaurant)
-    author = models.CharField(max_length = 10, blank = False)
-    message= models.TextField(blank = False)
+#댓글 기능 = 포스트 형식으로 깔깔
+class Post(models.Model):
+    author = models.CharField(max_length=20)
+    content = models.TextField(max_length=200,
+            validators=[MinLengthValidator(10)],
+            verbose_name='내용', help_text='댓글 최대 200자까지 지원됩니다.')  # descriptor syntax
+    #content = models.TextField(verbose_name='내용')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-id']
+
+    def __str__(self):
+        return self.content
+
+    #def get_absolute_url(self):
+        return reverse('blog:post_detail', args=[self.pk])
+
+
 
 
 class Meal(models.Model):

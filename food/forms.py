@@ -1,8 +1,8 @@
 from django import forms
 
-from food.models import Comment, Meal
+from food.models import Meal
 
-
+'''
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
@@ -23,7 +23,7 @@ class CommentForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         return cleaned_data
-
+'''
 class SoldOutForm(forms.ModelForm):
     class Meta:
         model = Meal
