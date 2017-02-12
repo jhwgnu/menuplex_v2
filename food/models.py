@@ -88,6 +88,16 @@ class Restaurant(models.Model):
             result += "   (석식)\n" + Meal.kakaotalk_meal_list(rest,"dinner")
         return result
 
+class Comment(models.Model):
+    restaurant = models.ForeignKey(Restaurant)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-id']
+
+
 class Meal(models.Model):
     school = models.ForeignKey(School,on_delete =models.CASCADE)
     restaurant = models.ForeignKey(Restaurant,on_delete =models.CASCADE)

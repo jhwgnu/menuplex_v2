@@ -1,5 +1,5 @@
 from django.contrib import admin
-from food.models import School,Restaurant,Meal
+from food.models import School,Restaurant,Meal,Comment
 
 ## admin 페이지에 크롤링 버튼을 만들고자 함
 ## 방법을 아직 모르겠음.
@@ -36,4 +36,5 @@ class MealAdmin(admin.ModelAdmin):
 admin.site.register(School, SchoolAdmin)
 admin.site.register(Restaurant,RestaurantAdmin)
 admin.site.register(Meal, MealAdmin)
+admin.site.register(Comment)
 
