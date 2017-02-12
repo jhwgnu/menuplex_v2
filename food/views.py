@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from food.models import School, Restaurant, Meal, Post
+from food.models import School, Restaurant, Meal #Post
 from datetime import datetime
 from django.template import loader, Context
 from django.template.response import TemplateResponse
-from food.forms import SoldOutForm, PostForm
+from food.forms import SoldOutForm # PostForm
 
 # Create your views here.
 def index(request):
@@ -25,9 +25,10 @@ def detail(request,shortname):
 
 def restaurant_detail(request,shortname,restaurant_name):
     restaurant = Restaurant.objects.get(name=restaurant_name)
-    post = Post.objects.get(pk=pk)
+    #post = Post.objects.get(pk=pk)
 
-    context = {'restaurant' : restaurant, 'post' : post}
+    context = {'restaurant' : restaurant, #'post' : post
+    }
 
     return render(request,'food/detail_restaurant.html',context)
 

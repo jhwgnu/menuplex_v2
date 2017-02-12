@@ -74,6 +74,7 @@ class Restaurant(models.Model):
     def get_absolute_url(self):
         return reverse("food:restaurant", args=[self.school.shortname, self.name])
 
+'''
 #댓글 기능 = 포스트 형식으로 깔깔
 class Post(models.Model):
     author = models.CharField(max_length=20)
@@ -92,7 +93,7 @@ class Post(models.Model):
 
     #def get_absolute_url(self):
         return reverse('blog:post_detail', args=[self.pk])
-
+'''
 
 
 
