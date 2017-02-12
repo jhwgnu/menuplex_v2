@@ -5,8 +5,25 @@
 <ul>
     식당 이름 : {{restaurant.name}} <br>
     식당 위치 : {{restaurant.location}}
-</ul>
+
+
+    <ul>
+    {% for comment in restaurant.comment_set.all %}
+        <li>
+            {{ comment.message }}
+            at {{ comment.created_at }}
+
+        </li>
+    {% endfor %}
+<form action="" method="POST">
+    {% csrf_token %}
+<table>{{form.as_table}}</table>
+<input type="SUBMIT" />
+</form>
+
+
+
 {% else %}
     <p> no restaurant description </p>
 {% endif %}
-{% endblock%}
+{% endblock %}

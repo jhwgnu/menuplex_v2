@@ -7,3 +7,6 @@ urlpatterns = [
     url(r'^(?P<shortname>[a-z]+)/history/$',views.history,name='history'),
     url(r'^(?P<shortname>[a-z]+)/(?P<restaurant_name>.*)/$',views.restaurant_detail,name='restaurant'),
 ]
+
+
+
