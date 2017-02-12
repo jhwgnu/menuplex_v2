@@ -16,7 +16,8 @@ def memoize(f):
     def helper(cls,x):
         t = datetime.today().day
         if (x,t) not in memo:
-            memo[(x,t)] = f(cls,x)
+            if f(cls,x):
+                memo[(x,t)] = f(cls,x)
         return memo[(x,t)]
     return helper
 
@@ -25,7 +26,8 @@ def memoize1(f):
     def helper(x):
         t = datetime.today().day
         if (x,t) not in memo:
-            memo[(x,t)] = f(x)
+            if f(x):
+                memo[(x,t)] = f(x)
         return memo[(x,t)]
     return helper
 
