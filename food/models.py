@@ -62,6 +62,10 @@ class School(models.Model):
         restaurant_dict = grouped_time.items()
         return restaurant_dict
 
+    @classmethod
+    def kakaotalk_list(cls,name):
+        school = School.objects.get(name = name)
+        return "" + name + "\n-----------\n" + Restaurant.kakaotalk_rest_list(school)
 
 class Restaurant(models.Model):
     school = models.ForeignKey(School,on_delete =models.CASCADE)
@@ -74,28 +78,15 @@ class Restaurant(models.Model):
     def get_absolute_url(self):
         return reverse("food:restaurant", args=[self.school.shortname, self.name])
 
-'''
-#댓글 기능 = 포스트 형식으로 깔깔
-class Post(models.Model):
-    author = models.CharField(max_length=20)
-    content = models.TextField(max_length=200,
-            validators=[MinLengthValidator(10)],
-            verbose_name='내용', help_text='댓글 최대 200자까지 지원됩니다.')  # descriptor syntax
-    #content = models.TextField(verbose_name='내용')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        ordering = ['-id']
-
-    def __str__(self):
-        return self.content
-
-    #def get_absolute_url(self):
-        return reverse('blog:post_detail', args=[self.pk])
-'''
-
-
+    @classmethod
+    def kakaotalk_rest_list(cls,school):
+        result = ""
+        for rest in Restaurant.objects.filter(school = school):
+            result += " [" + rest.name +"]\n"
+            result += "   (조식)\n" + Meal.kakaotalk_meal_list(rest,"morning")
+            result += "   (중식)\n" + Meal.kakaotalk_meal_list(rest,"lunch")
+            result += "   (석식)\n" + Meal.kakaotalk_meal_list(rest,"dinner")
+        return result
 
 class Meal(models.Model):
     school = models.ForeignKey(School,on_delete =models.CASCADE)
@@ -106,6 +97,17 @@ class Meal(models.Model):
     soldout = models.BooleanField(default=False)
     def __str__(self):
         return self.name
+
+    @classmethod
+    def kakaotalk_meal_list(cls,restaurant,time):
+        result = ""
+        today = datetime.now()
+        meal_list = Meal.objects.filter(restaurant = restaurant).filter(time = time).filter(meal_date = today)
+        for meal in meal_list:
+            result = result + "    "+ meal.name + "\n"
+
+        return result
+
     # 메뉴의 히스토리를 가져오는 것
     # 같은 식당에 한에서만 가져와야 함.
     @memoize1
