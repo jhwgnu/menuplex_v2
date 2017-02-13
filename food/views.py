@@ -25,19 +25,52 @@ def detail(request,shortname):
 
 def restaurant_detail(request,shortname,restaurant_name):
     restaurant = Restaurant.objects.get(name=restaurant_name)
+    context = {'restaurant': restaurant,'shortname' : shortname, "restaurant_name": restaurant_name,'form' : CommentForm}
     if request.method == "POST":
         form = CommentForm(request.POST)
-        restaurant = Restaurant.objects.get(name=restaurant_name)
+        #restaurant = Restaurant.objects.get(name=restaurant_name)
         if form.is_valid():
             comment = form.save(commit=False)
             comment.restaurant = restaurant
             comment.save()
-            return render(request,'food/detail_restaurant.html',{'restaurant': restaurant,'shortname' : shortname, "restaurant_name": restaurant_name,'form' : CommentForm,})
+            return render(request,'food/detail_restaurant.html',context)
     else :
-        #post = Post.objects.get(pk=pk)
-        context = {'restaurant' : restaurant, 'form' : CommentForm,
-        }
         return render(request,'food/detail_restaurant.html',context)
+
+
+
+
+def comment_edit(request, shortname,restaurant_name, pk):
+    comment = Comment.objects.get(pk=pk)
+    restaurant = Restaurant.objects.get(name=restaurant_name)
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            comment = form.save()
+            context = {'restaurant': restaurant,'shortname' : shortname, "restaurant_name": restaurant_name,'form' : form,}
+            return render(request,'food/detail_restaurant.html',context)
+    else :
+        form = CommentForm(instance=comment)
+        context = {'restaurant': restaurant,'shortname' : shortname, "restaurant_name": restaurant_name,'form' : form,}
+        return render(request,'food/detail_restaurant.html',context)
+
+
+def comment_delete(request, shortname, restaurant_name, pk):
+    comment = Comment.objects.get(pk=pk)
+    restaurant = Restaurant.objects.get(name=restaurant_name)
+    context = {'restaurant': restaurant,'shortname' : shortname, "restaurant_name": restaurant_name,'form' : CommentForm,}
+    if request.method == 'POST':
+        comment.delete()
+        return render(request,'food/detail_restaurant.html',{'restaurant': restaurant,'shortname' : shortname, "restaurant_name": restaurant_name,'form' : CommentForm,})
+    return render(request, 'food/comment_delete_confirm.html', {
+        'comment': comment,
+    })
+
+
+
+
+
 
 
 def history(request,shortname):
