@@ -34,6 +34,21 @@ def memoize1(f):
         return memo[(x,t)]
     return helper
 
+def memoize_check(f):
+    memo = {}
+    t = datetime.today().day
+    def helper(cls,x, check):
+        if check :
+            if f(cls,x):
+                memo[(x,t)] = f(cls,x)
+            return memo[(x,t)]
+        else :
+            if (x,t) not in memo:
+                if f(cls,x):
+                    memo[(x,t)] = f(cls,x)
+            return memo[(x,t)]
+    return helper
+
 class School(models.Model):
     name = models.CharField(max_length=100)
     school_url = models.URLField(max_length=200)
@@ -44,8 +59,8 @@ class School(models.Model):
 
     # views.py에서 레스토랑의 이름 - 시간 - 식사 이름 을 출력해주는 창.
     @classmethod
-    @memoize
-    def detail_list(cls,school_id):
+    @memoize_check
+    def detail_list(cls,school_id,check=False):
         restaurant_list = Restaurant.objects.filter(school_id=school_id)
         meal_list = Meal.objects.filter(school_id=school_id).filter(meal_date=datetime.now())
 
@@ -103,7 +118,7 @@ class Meal(models.Model):
     name = models.CharField(max_length=100)
     time = models.CharField(max_length=10,choices =TIME_CHOICES,default='lunch',)
     meal_date = models.DateField()
-    soldout = models.BooleanField(default=False)
+    soldout = models.BooleanField(default=True)
     def __str__(self):
         return self.name
     # 메뉴의 히스토리를 가져오는 것
