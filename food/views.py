@@ -107,11 +107,11 @@ def message(request):
             "buttons" : ["서울대", "고려대", "한양대"]
             }
             })
-    else
+    else :
         return JsonResponse({
             'message' : {
             'text' : School.kakaotalk_list("서울대")
-            },
+            }, :
             'keyboard' : {
             "type" : "buttons",
             "buttons" : ["서울대", "고려대", "한양대"]
