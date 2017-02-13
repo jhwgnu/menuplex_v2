@@ -1,10 +1,12 @@
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from food.models import School, Restaurant, Meal,Comment
+from django.http import HttpResponse, JsonResponse
+from food.models import School, Restaurant, Meal, Comment
 from datetime import datetime
 from django.template import loader, Context
 from django.template.response import TemplateResponse
 from food.forms import SoldOutForm, CommentForm
+import json
 
 # Create your views here.
 def index(request):
@@ -81,3 +83,26 @@ def history(request,shortname):
 
     return TemplateResponse(request,template,{'meal_history':meal_history})
 
+
+def keyboard(request):
+    data = {
+    "type" : "buttons",
+    "buttons" : ["서울대", "고려대", "한양대"]
+        }
+    return JsonResponse(data)
+
+@csrf_exempt
+def message(request):
+    json_str = (request.body).decode('utf-8')
+    received_json_data = json.loads(json_str)
+    name = received_json_data['content']
+
+    return JsonResponse({
+        'message' : {
+        'text' : School.kakaotalk_list(name)
+        },
+        'keyboard' : {
+        "type" : "buttons",
+        "buttons" : ["서울대", "고려대", "한양대"]
+        }
+        })
