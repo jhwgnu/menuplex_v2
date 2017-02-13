@@ -5,7 +5,6 @@ from django.db import models
 from datetime import datetime
 from django.core.validators import MinLengthValidator
 
-
 TIME_CHOICES = (
     ('morning', '조식'),
     ('lunch'  , '중식'),
@@ -34,6 +33,21 @@ def memoize1(f):
         return memo[(x,t)]
     return helper
 
+def memoize_check(f):
+    memo = {}
+    t = datetime.today().day
+    def helper(cls,x, check):
+        if check :
+            if f(cls,x):
+                memo[(x,t)] = f(cls,x)
+            return memo[(x,t)]
+        else :
+            if (x,t) not in memo:
+                if f(cls,x):
+                    memo[(x,t)] = f(cls,x)
+            return memo[(x,t)]
+    return helper
+
 class School(models.Model):
     name = models.CharField(max_length=100)
     school_url = models.URLField(max_length=200)
@@ -44,8 +58,8 @@ class School(models.Model):
 
     # views.py에서 레스토랑의 이름 - 시간 - 식사 이름 을 출력해주는 창.
     @classmethod
-    @memoize
-    def detail_list(cls,school_id):
+    @memoize_check
+    def detail_list(cls,school_id,check=False):
         restaurant_list = Restaurant.objects.filter(school_id=school_id)
         meal_list = Meal.objects.filter(school_id=school_id).filter(meal_date=datetime.now())
 
@@ -62,6 +76,10 @@ class School(models.Model):
         restaurant_dict = grouped_time.items()
         return restaurant_dict
 
+    @classmethod
+    def kakaotalk_list(cls,name):
+        school = School.objects.get(name = name)
+        return "" + name + "\n-----------------------\n" + Restaurant.kakaotalk_rest_list(school)
 
 class Restaurant(models.Model):
     school = models.ForeignKey(School,on_delete =models.CASCADE)
@@ -74,11 +92,57 @@ class Restaurant(models.Model):
     def get_absolute_url(self):
         return reverse("food:restaurant", args=[self.school.shortname, self.name])
 
+    class Meta:
+        ordering = ['-id']
+
+    @classmethod
+    @memoize
+    def kakaotalk_rest_list(cls,school):
+        result = ""
+        today = datetime.now()
+        for restaurant in Restaurant.objects.filter(school = school):
+            meal_list = Meal.objects.filter(restaurant = restaurant).filter(meal_date = today)
+            result += "[" + restaurant.name +"]\n"
+            if meal_list :
+                #조식 리스트
+                meal_time_list = meal_list.filter(time = "morning")
+                if  meal_time_list:
+                    result += "    (조식)\n"
+                    for meal in meal_time_list:
+                        result += "    >"+ meal.name + "\n"
+                else :
+                    result += "    (조식) : 제공하지 않습니다 ㅠㅠ\n"
+                #중식 리스트
+                meal_time_list = meal_list.filter(time = "lunch")
+                if meal_time_list :
+                    result += "    (중식)\n"
+                    for meal in meal_time_list:
+                        result += "    >"+ meal.name + "\n"
+                else :
+                    result += "    (중식) : 제공하지 않습니다 ㅠㅠ\n"
+                #석식 리스트
+                meal_time_list = meal_list.filter(time = "dinner")
+                if meal_time_list:
+                    result += "    (석식)\n"
+                    for meal in meal_time_list:
+                        result += "    >"+ meal.name + "\n"
+                else :
+                    result += "    (석식) : 제공하지 않습니다 ㅠㅠ\n"
+                # 줄바꿈
+
+            else :
+                result += "오늘 식사가 없습니다 ㅠㅠ\n"
+            result += "\n"+"\n"
+        return result
+
 class Comment(models.Model):
     restaurant = models.ForeignKey(Restaurant)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.message
 
     class Meta:
         ordering = ['-id']
@@ -90,9 +154,10 @@ class Meal(models.Model):
     name = models.CharField(max_length=100)
     time = models.CharField(max_length=10,choices =TIME_CHOICES,default='lunch',)
     meal_date = models.DateField()
-    soldout = models.BooleanField(default=False)
+    soldout = models.BooleanField(default=True)
     def __str__(self):
         return self.name
+
     # 메뉴의 히스토리를 가져오는 것
     # 같은 식당에 한에서만 가져와야 함.
     @memoize1

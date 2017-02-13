@@ -20,12 +20,14 @@ class SchoolAdmin(admin.ModelAdmin):
 class RestaurantAdmin(admin.ModelAdmin):
     list_display = ['id','name','location','school']
     list_display_links = ['id','name']
+    list_filter = ['school']
     search_fields = ['name']
 
 
 class MealAdmin(admin.ModelAdmin):
     list_display = ['id','name','time','meal_date','restaurant','school']
     list_display_links = ['id','name']
+    list_filter = ['school', 'restaurant']
     search_fields = ['name']
 
     def delete_model(self,request,obj):
@@ -33,8 +35,14 @@ class MealAdmin(admin.ModelAdmin):
             o.delete()
     delete_model.short_description = 'Delete flow'
 
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ['id', 'restaurant','message']
+    list_display_links = ['id','message']
+    list_filter = ['restaurant']
+    search_fields = ['message']
+
 admin.site.register(School, SchoolAdmin)
 admin.site.register(Restaurant,RestaurantAdmin)
 admin.site.register(Meal, MealAdmin)
-admin.site.register(Comment)
+admin.site.register(Comment, CommentAdmin)
 

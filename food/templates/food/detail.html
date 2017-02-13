@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 
 {% block content %}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -22,10 +23,41 @@
 
     <!-- Custom Fonts -->
     <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <style>
+       #map {
+        height: 50px;
+        width: 50%;
+       }
+    </style>
 
 </head>
 
 <body>
+    <h3>My Google Maps Demo</h3>
+    <div id="map"></div>
+    <script>
+      function initMap() {
+        var uluru = {lat: 37.45886, lng: 126.95};
+        // var uluru2 = {lat: 37.462342, lng: 127.0017349};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 14,
+          center: uluru
+        });
+        var marker = new google.maps.Marker({
+          position: uluru,
+          // position: uluru2,
+          map: map
+        });
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJG-bVA-9JCqT9FVFoYz5OWRfRr0g9LhQ&callback=initMap">
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <!--버튼용 -->
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
@@ -42,7 +74,23 @@
                     </div>
                     <div class="panel-body">
                     {% for meals in restaurant.1 %}
-                    <li>
+                    {% for meal in meals.1 %}
+                    <li class = 'meal' id='{{meal.id}}'>{{ meal.soldout }}
+                        {% if meal.soldout == True %}
+                            <span id = "span{{ meal.id }}">{{meal}}</span>
+                        {% else %}
+                            <span id = "span{{ meal.id }}" style="text-decoration:line-through">{{meal}}</span>
+                        {% endif %}
+                    </li>
+                        <div class = "soldout" id="soldout{{ meal.id }}" style="width: 81.7383px; height: 33.2422px;">
+                        {% if meal.soldout == True %}
+                            <input type="checkbox"  checked data-toggle="toggle" id="toggle{{meal.id}}" name='toggle' data-on="판매중" data-off="매진">
+                        {% else %}
+                            <input type="checkbox"  unchecked data-toggle="toggle" id="toggle{{meal.id}}" name='toggle' data-on="판매중" data-off="매진">
+                        {% endif %}
+                        </div>
+                    {% endfor %}
+                    <!-- <li>
                         {{meals.0}}
                         <ul>
                             {% for meal in meals.1 %}
@@ -57,7 +105,7 @@
                             {% endfor %}
                         </ul>
                     </li>
-                    {% endfor %}
+                    {% endfor %} -->
                     <a href="#" class="btn btn-default">Map</a>
                     </div>
                 </div>
@@ -65,6 +113,93 @@
             {% endfor %}
             {% endif %}
         </div>
+
+
+
+<script>
+// using jQuery
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+var csrftoken = getCookie('csrftoken');
+    $(document).ready(function(){
+        $('.meal').click(function(){
+            var t = $(this)[0];
+            var tstr = 'target' + t.id;
+            var target = '#'+tstr;
+            if ($(target).length==0){
+                $.ajax({
+                url : 'history/',
+                type: 'GET',
+                data : {'meal':t.id},
+                success:function(data){
+                    var p = document.createElement('div');
+                    p.innerHTML = data;
+                    p.setAttribute('style','display: none');
+                    p.setAttribute('id',tstr);
+                    t.append(p);
+                    $(target).slideDown("slow");
+                }
+                });
+            } else {
+                if ($(target).attr("style") == 'display: none;') {
+                    $(target).slideDown("slow");
+                } else {
+                    $(target).slideUp("slow");
+                }
+            }
+        });
+
+        $('.soldout').click(function() {
+            var check_div = $(this).children("div");
+            var bool = true;
+            if(check_div.attr('class') == "toggle btn btn-primary"){
+                bool = true;
+            }
+            else{
+                bool = false;
+            }
+            alert("판매상태가 바뀝니다." + bool);
+            var get_id = $(this).attr('id');
+            var get_id_d = get_id.replace("soldout", "");
+            var get_id_r = get_id.replace("soldout", "span");
+            var get_id_r = "#"+get_id_r;
+            if(bool == true){
+                $(get_id_r).attr("style", "text-decoration:line-through");
+            }
+            else{
+                $(get_id_r).attr("style", "");
+            }
+
+            $.ajax({
+                url: 'bool/',
+                type: 'POST',
+                data: {
+                    'bool': bool,
+                    'meal_pk' : get_id_d,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                dataType: 'json',
+                complete: function (data) {
+                    alert("바뀜 성공");
+                }
+            });
+         });
+    });
+
+</script>
 </body>
 </html>
 {% endblock %}
