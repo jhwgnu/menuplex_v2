@@ -3,6 +3,8 @@ from food.models import School,Restaurant,Meal,Comment,Map
 
 ## admin 페이지에 크롤링 버튼을 만들고자 함
 ## 방법을 아직 모르겠음.
+
+
 class MapAdmin(admin.ModelAdmin):
     list_display = ['user', 'school','lnglat','rest_name']
     list_display_links = ['user']

@@ -453,9 +453,9 @@ class Meal(models.Model):
 
 
 class Map(models.Model):
-    user = models.ForeignKey(User,on_delete =models.CASCADE)
-    school = models.ForeignKey(School,on_delete =models.CASCADE)
-    rest_name = models.ForeignKey(Restaurant,on_delete =models.CASCADE)
+    user = models.ForeignKey(User)
+    school = models.ForeignKey(School)
+    rest_name = models.ForeignKey(Restaurant)
     # 학교랑 관련된 식당만 받으려고 삽질하다가 실패! ㅎㅎㅎㅎㅎ
     # rest_name = Restaurant.objects.filter(school=school)
     lnglat = models.CharField(max_length=50, blank=True,
