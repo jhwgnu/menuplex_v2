@@ -5,7 +5,6 @@ from django.db import models
 from datetime import datetime
 from django.core.validators import MinLengthValidator
 
-
 TIME_CHOICES = (
     ('morning', '조식'),
     ('lunch'  , '중식'),
@@ -77,6 +76,10 @@ class School(models.Model):
         restaurant_dict = grouped_time.items()
         return restaurant_dict
 
+    @classmethod
+    def kakaotalk_list(cls,name):
+        school = School.objects.get(name = name)
+        return "" + name + "\n-----------------------\n" + Restaurant.kakaotalk_rest_list(school)
 
 class Restaurant(models.Model):
     school = models.ForeignKey(School,on_delete =models.CASCADE)
@@ -89,27 +92,60 @@ class Restaurant(models.Model):
     def get_absolute_url(self):
         return reverse("food:restaurant", args=[self.school.shortname, self.name])
 
-'''
-#댓글 기능 = 포스트 형식으로 깔깔
-class Post(models.Model):
-    author = models.CharField(max_length=20)
-    content = models.TextField(max_length=200,
-            validators=[MinLengthValidator(10)],
-            verbose_name='내용', help_text='댓글 최대 200자까지 지원됩니다.')  # descriptor syntax
-    #content = models.TextField(verbose_name='내용')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
     class Meta:
         ordering = ['-id']
 
+    @classmethod
+    @memoize
+    def kakaotalk_rest_list(cls,school):
+        result = ""
+        today = datetime.now()
+        for restaurant in Restaurant.objects.filter(school = school):
+            meal_list = Meal.objects.filter(restaurant = restaurant).filter(meal_date = today)
+            result += "[" + restaurant.name +"]\n"
+            if meal_list :
+                #조식 리스트
+                meal_time_list = meal_list.filter(time = "morning")
+                if  meal_time_list:
+                    result += "    (조식)\n"
+                    for meal in meal_time_list:
+                        result += "    >"+ meal.name + "\n"
+                else :
+                    result += "    (조식) : 제공하지 않습니다 ㅠㅠ\n"
+                #중식 리스트
+                meal_time_list = meal_list.filter(time = "lunch")
+                if meal_time_list :
+                    result += "    (중식)\n"
+                    for meal in meal_time_list:
+                        result += "    >"+ meal.name + "\n"
+                else :
+                    result += "    (중식) : 제공하지 않습니다 ㅠㅠ\n"
+                #석식 리스트
+                meal_time_list = meal_list.filter(time = "dinner")
+                if meal_time_list:
+                    result += "    (석식)\n"
+                    for meal in meal_time_list:
+                        result += "    >"+ meal.name + "\n"
+                else :
+                    result += "    (석식) : 제공하지 않습니다 ㅠㅠ\n"
+                # 줄바꿈
+
+            else :
+                result += "오늘 식사가 없습니다 ㅠㅠ\n"
+            result += "\n"+"\n"
+        return result
+
+class Comment(models.Model):
+    restaurant = models.ForeignKey(Restaurant)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
     def __str__(self):
-        return self.content
+        return self.message
 
-    #def get_absolute_url(self):
-        return reverse('blog:post_detail', args=[self.pk])
-'''
-
+    class Meta:
+        ordering = ['-id']
 
 
 class Meal(models.Model):
@@ -121,6 +157,7 @@ class Meal(models.Model):
     soldout = models.BooleanField(default=True)
     def __str__(self):
         return self.name
+
     # 메뉴의 히스토리를 가져오는 것
     # 같은 식당에 한에서만 가져와야 함.
     @memoize1
