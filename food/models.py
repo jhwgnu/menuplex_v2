@@ -151,7 +151,7 @@ class Comment(models.Model):
 class Meal(models.Model):
     school = models.ForeignKey(School,on_delete =models.CASCADE)
     restaurant = models.ForeignKey(Restaurant,on_delete =models.CASCADE)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=800)
     time = models.CharField(max_length=10,choices =TIME_CHOICES,default='lunch',)
     meal_date = models.DateField()
     soldout = models.BooleanField(default=False)
@@ -195,17 +195,17 @@ class Meal(models.Model):
                 mornings = restaurant.select('td')[2].contents[0].replace('\xa0','').split('/')
                 if mornings[0] !='': # 비어있지 않다면,
                     for morning in mornings :
-                        cls.objects.create(school = snu , restaurant = rest, name = morning , time = "morning", meal_date = today)
+                        cls.objects.get_or_create(school = snu , restaurant = rest, name = morning , time = "morning", meal_date = today)
 
                 lunchs = restaurant.select('td')[4].contents[0].replace('\xa0','').split('/')
                 if lunchs[0] !='': # 비어있지 않다면,
                     for lunch in lunchs :
-                        cls.objects.create(school = snu , restaurant = rest, name = lunch , time = "lunch", meal_date = today)
+                        cls.objects.get_or_create(school = snu , restaurant = rest, name = lunch , time = "lunch", meal_date = today)
 
                 dinners = restaurant.select('td')[6].contents[0].replace('\xa0','').split('/')
                 if dinners[0] !='': # 비어있지 않다면,
                     for dinner in dinners :
-                        cls.objects.create(school = snu , restaurant = rest, name = dinner , time = "dinner", meal_date = today)
+                        cls.objects.get_or_create(school = snu , restaurant = rest, name = dinner , time = "dinner", meal_date = today)
 
         # 크롤링을 했을 경우 동작하지 않도록함
         if not Meal.objects.filter(school=snu).filter(meal_date = datetime.now()):
@@ -257,10 +257,16 @@ class Meal(models.Model):
 
                         if menu.select("p"):
                             for i in range(0,len(menu.select("p"))): # 메뉴가 1개보다 많은 식당
-                                m_list = menu.select("p")[i].string.split('-') # 0번째 원소 : 식사 시간 // 1번째 원소 : 음식 이름
-                                cls.objects.create(school = ku, restaurant = rest, name = m_list[1],time = date_change(m_list[0]), meal_date = t_date)
+                                if '-' in menu.select("p")[i].string:
+                                    m_list = menu.select("p")[i].string.split('-') # 0번째 원소 : 식사 시간 // 1번째 원소 : 음식 이름
+                                    cls.objects.get_or_create(school = ku, restaurant = rest, name = m_list[1],time = date_change(m_list[0]), meal_date = t_date)
+                                elif ':' in menu.select("p")[i].string:
+                                    m_list = menu.select("p")[i].string.split(':') # 0번째 원소 : 식사 시간 // 1번째 원소 : 음식 이름
+                                    cls.objects.get_or_create(school = ku, restaurant = rest, name = m_list[1],time = 'lunch', meal_date = t_date)
+                                else :
+                                    cls.objects.get_or_create(school = ku, restaurant = rest, name = menu.select("p")[i].string ,time = 'lunch', meal_date = t_date)
                         else : # 메뉴가 1개인 식당
-                            cls.objects.create(school = ku , restaurant = rest, name = menu.next.string , time = "lunch", meal_date = t_date)
+                            cls.objects.get_or_create(school = ku , restaurant = rest, name = menu.next.string , time = "lunch", meal_date = t_date)
 
     # 한양대 대상으로 한 크롤러
     @classmethod
@@ -271,8 +277,10 @@ class Meal(models.Model):
         def crawl_HYU_url(url,rest) :
             html = requests.get(url).text
             soup = BeautifulSoup(html, 'html.parser')
-            table = soup.find('tbody').find_next('tbody')
 
+            table = soup.find('tbody').find_next('tbody')
+            if(url == "http://www.hanyang.ac.kr/web/www/-250#none"):
+                table = soup.find('tbody').find_next('tbody').find_next('tbody')
             flour_food = "" # 분식은 일단 중식으로 넣자
             breakfast = ""
             lunch = ""
@@ -288,10 +296,10 @@ class Meal(models.Model):
                     if len(li_tag) > 0:
                         if flour_food == "":
                             flour_food = li_tag.string
-                            cls.objects.create(school=hyu,restaurant=rest, name = li_tag.string,time="lunch",meal_date=today)
+                            cls.objects.get_or_create(school=hyu,restaurant=rest, name = li_tag.string,time="lunch",meal_date=today)
                         else:
                             flour_food += (", "+li_tag.string)
-                            cls.objects.create(school=hyu,restaurant=rest, name = li_tag.string,time="lunch",meal_date=today)
+                            cls.objects.get_or_create(school=hyu,restaurant=rest, name = li_tag.string,time="lunch",meal_date=today)
 
             except AttributeError:
                 pass
@@ -308,10 +316,10 @@ class Meal(models.Model):
                     if len(li_tag) > 0:
                         if breakfast == "":
                             breakfast = li_tag.string
-                            cls.objects.create(school=hyu,restaurant=rest, name = li_tag.string,time="morning",meal_date=today)
+                            cls.objects.get_or_create(school=hyu,restaurant=rest, name = li_tag.string,time="morning",meal_date=today)
                         else:
                             breakfast += (", "+li_tag.string)
-                            cls.objects.create(school=hyu,restaurant=rest, name = li_tag.string,time="morning",meal_date=today)
+                            cls.objects.get_or_create(school=hyu,restaurant=rest, name = li_tag.string,time="morning",meal_date=today)
             except AttributeError:
                 pass
             except IndexError:
@@ -327,8 +335,10 @@ class Meal(models.Model):
                     if len(li_tag) > 0:
                         if lunch == "":
                             lunch = li_tag.string
+                            cls.objects.create(school=hyu, restaurant=rest, name=li_tag.string, time="lunch", meal_date=today)
                         else:
                             lunch += (", "+li_tag.string)
+                            cls.objects.create(school=hyu, restaurant=rest, name=li_tag.string, time="lunch", meal_date=today)
             except AttributeError:
                 pass
             except IndexError:
@@ -344,16 +354,16 @@ class Meal(models.Model):
                     if len(li_tag) > 0:
                         if breakfast == "":
                             breakfast = li_tag.string
-                            cls.objects.create(school=hyu,restaurant=rest, name = li_tag.string,time="morning",meal_date=today)
+                            cls.objects.get_or_create(school=hyu,restaurant=rest, name = li_tag.string,time="morning",meal_date=today)
                         else:
                             breakfast += (", "+li_tag.string)
-                            cls.objects.create(school=hyu,restaurant=rest, name = li_tag.string,time="morning",meal_date=today)
+                            cls.objects.get_or_create(school=hyu,restaurant=rest, name = li_tag.string,time="morning",meal_date=today)
                         if lunch == "":
                             lunch = li_tag.string
-                            cls.objects.create(school=hyu,restaurant=rest, name = li_tag.string,time="lunch",meal_date=today)
+                            cls.objects.get_or_create(school=hyu,restaurant=rest, name = li_tag.string,time="lunch",meal_date=today)
                         else:
                             lunch += (", "+li_tag.string)
-                            cls.objects.create(school=hyu,restaurant=rest, name = li_tag.string,time="lunch",meal_date=today)
+                            cls.objects.get_or_create(school=hyu,restaurant=rest, name = li_tag.string,time="lunch",meal_date=today)
             except AttributeError:
                 pass
             except IndexError:
@@ -369,10 +379,10 @@ class Meal(models.Model):
                     if len(li_tag) > 0:
                         if dinner == "":
                             dinner = li_tag.string
-                            cls.objects.create(school=hyu,restaurant=rest, name = li_tag.string,time="dinner",meal_date=today)
+                            cls.objects.get_or_create(school=hyu,restaurant=rest, name = li_tag.string,time="dinner",meal_date=today)
                         else:
                             dinner += (", "+li_tag.string)
-                            cls.objects.create(school=hyu,restaurant=rest, name = li_tag.string,time="dinner",meal_date=today)
+                            cls.objects.get_or_create(school=hyu,restaurant=rest, name = li_tag.string,time="dinner",meal_date=today)
             except AttributeError:
                 pass
             except IndexError:
@@ -388,16 +398,16 @@ class Meal(models.Model):
                     if len(li_tag) > 0:
                         if lunch == "":
                             lunch = li_tag.string
-                            cls.objects.create(school=hyu,restaurant=rest, name = li_tag.string,time="lunch",meal_date=today)
+                            cls.objects.get_or_create(school=hyu,restaurant=rest, name = li_tag.string,time="lunch",meal_date=today)
                         else:
                             lunch += (", "+li_tag.string)
-                            cls.objects.create(school=hyu,restaurant=rest, name = li_tag.string,time="lunch",meal_date=today)
+                            cls.objects.get_or_create(school=hyu,restaurant=rest, name = li_tag.string,time="lunch",meal_date=today)
                         if dinner == "":
                             dinner = li_tag.string
-                            cls.objects.create(school=hyu,restaurant=rest, name = li_tag.string,time="dinner",meal_date=today)
+                            cls.objects.get_or_create(school=hyu,restaurant=rest, name = li_tag.string,time="dinner",meal_date=today)
                         else:
                             dinner += (", "+li_tag.string)
-                            cls.objects.create(school=hyu,restaurant=rest, name = li_tag.string,time="dinner",meal_date=today)
+                            cls.objects.get_or_create(school=hyu,restaurant=rest, name = li_tag.string,time="dinner",meal_date=today)
             except AttributeError:
                 pass
             except IndexError:
