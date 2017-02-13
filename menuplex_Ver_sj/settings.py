@@ -95,7 +95,7 @@ DATABASES = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
@@ -110,7 +110,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 CRONJOBS = [
-    ('30 02***','food.cron.scheduled_job'),
+    ('*/0 */1 * *','food.cron.scheduled_job'),
 ]
 # 스케쥴 작업
 # 작업 추가 : python manage.py crontab add

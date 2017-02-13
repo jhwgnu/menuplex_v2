@@ -5,7 +5,6 @@ from django.db import models
 from datetime import datetime
 from django.core.validators import MinLengthValidator
 
-
 TIME_CHOICES = (
     ('morning', '조식'),
     ('lunch'  , '중식'),
@@ -65,7 +64,7 @@ class School(models.Model):
     @classmethod
     def kakaotalk_list(cls,name):
         school = School.objects.get(name = name)
-        return "" + name + "\n-----------\n" + Restaurant.kakaotalk_rest_list(school)
+        return "" + name + "\n-----------------------\n" + Restaurant.kakaotalk_rest_list(school)
 
 class Restaurant(models.Model):
     school = models.ForeignKey(School,on_delete =models.CASCADE)
@@ -79,13 +78,40 @@ class Restaurant(models.Model):
         return reverse("food:restaurant", args=[self.school.shortname, self.name])
 
     @classmethod
+    @memoize
     def kakaotalk_rest_list(cls,school):
         result = ""
-        for rest in Restaurant.objects.filter(school = school):
-            result += " [" + rest.name +"]\n"
-            result += "   (조식)\n" + Meal.kakaotalk_meal_list(rest,"morning")
-            result += "   (중식)\n" + Meal.kakaotalk_meal_list(rest,"lunch")
-            result += "   (석식)\n" + Meal.kakaotalk_meal_list(rest,"dinner")
+        today = datetime.now()
+        for restaurant in Restaurant.objects.filter(school = school):
+            meal_list = Meal.objects.filter(restaurant = restaurant).filter(meal_date = today)
+            result += "[" + restaurant.name +"]\n"
+            if meal_list :
+                #조식 리스트
+                meal_time_list = meal_list.filter(time = "morning")
+                if  meal_time_list:
+                    result += "    (조식)\n"
+                    for meal in meal_time_list:
+                        result += "    >"+ meal.name + "\n"
+                else :
+                    result += "   (조식) : 제공하지 않습니다 ㅠㅠ"
+                #중식 리스트
+                meal_time_list = meal_list.filter(time = "lunch")
+                if meal_time_list :
+                    result += "    (중식)\n"
+                    for meal in meal_time_list:
+                        result += "    >"+ meal.name + "\n"
+                else :
+                    result += "   (중식) : 제공하지 않습니다 ㅠㅠ"
+                #석식 리스트
+                meal_time_list = meal_list.filter(time = "dinner")
+                if meal_time_list:
+                    result += "    (석식)\n"
+                    for meal in meal_time_list:
+                        result += "    >"+ meal.name + "\n"
+                else :
+                    result += "   (석식) : 제공하지 않습니다 ㅠㅠ"
+            else :
+                reult += "오늘 식사가 없습니다 ㅠㅠ\n"
         return result
 
 class Comment(models.Model):
@@ -107,16 +133,6 @@ class Meal(models.Model):
     soldout = models.BooleanField(default=False)
     def __str__(self):
         return self.name
-
-    @classmethod
-    def kakaotalk_meal_list(cls,restaurant,time):
-        result = ""
-        today = datetime.now()
-        meal_list = Meal.objects.filter(restaurant = restaurant).filter(time = time).filter(meal_date = today)
-        for meal in meal_list:
-            result = result + "    "+ meal.name + "\n"
-
-        return result
 
     # 메뉴의 히스토리를 가져오는 것
     # 같은 식당에 한에서만 가져와야 함.

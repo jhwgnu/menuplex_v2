@@ -60,16 +60,27 @@ def keyboard(request):
 
 @csrf_exempt
 def message(request):
-    json_str = (request.body).decode('utf-8')
-    received_json_data = json.loads(json_str)
-    name = received_json_data['content']
+    if request.body :
+        json_str = (request.body).decode('utf-8')
+        received_json_data = json.loads(json_str)
+        name = received_json_data['content']
 
-    return JsonResponse({
-        'message' : {
-        'text' : School.kakaotalk_list(name)
-        },
-        'keyboard' : {
-        "type" : "buttons",
-        "buttons" : ["서울대", "고려대", "한양대"]
-        }
-        })
+        return JsonResponse({
+            'message' : {
+            'text' : School.kakaotalk_list(name)
+            },
+            'keyboard' : {
+            "type" : "buttons",
+            "buttons" : ["서울대", "고려대", "한양대"]
+            }
+            })
+    else
+        return JsonResponse({
+            'message' : {
+            'text' : School.kakaotalk_list("서울대")
+            },
+            'keyboard' : {
+            "type" : "buttons",
+            "buttons" : ["서울대", "고려대", "한양대"]
+            }
+            })
