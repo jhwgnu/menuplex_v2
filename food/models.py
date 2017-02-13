@@ -151,7 +151,7 @@ class Comment(models.Model):
 class Meal(models.Model):
     school = models.ForeignKey(School,on_delete =models.CASCADE)
     restaurant = models.ForeignKey(Restaurant,on_delete =models.CASCADE)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=800)
     time = models.CharField(max_length=10,choices =TIME_CHOICES,default='lunch',)
     meal_date = models.DateField()
     soldout = models.BooleanField(default=False)
@@ -271,8 +271,10 @@ class Meal(models.Model):
         def crawl_HYU_url(url,rest) :
             html = requests.get(url).text
             soup = BeautifulSoup(html, 'html.parser')
-            table = soup.find('tbody').find_next('tbody')
 
+            table = soup.find('tbody').find_next('tbody')
+            if(url == "http://www.hanyang.ac.kr/web/www/-250#none"):
+                table = soup.find('tbody').find_next('tbody').find_next('tbody')
             flour_food = "" # 분식은 일단 중식으로 넣자
             breakfast = ""
             lunch = ""
@@ -327,8 +329,10 @@ class Meal(models.Model):
                     if len(li_tag) > 0:
                         if lunch == "":
                             lunch = li_tag.string
+                            cls.objects.create(school=hyu, restaurant=rest, name=li_tag.string, time="lunch", meal_date=today)
                         else:
                             lunch += (", "+li_tag.string)
+                            cls.objects.create(school=hyu, restaurant=rest, name=li_tag.string, time="lunch", meal_date=today)
             except AttributeError:
                 pass
             except IndexError:
