@@ -77,6 +77,9 @@ class Restaurant(models.Model):
     def get_absolute_url(self):
         return reverse("food:restaurant", args=[self.school.shortname, self.name])
 
+    class Meta:
+        ordering = ['-id']
+
     @classmethod
     @memoize
     def kakaotalk_rest_list(cls,school):
@@ -119,6 +122,9 @@ class Comment(models.Model):
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.message
 
     class Meta:
         ordering = ['-id']
