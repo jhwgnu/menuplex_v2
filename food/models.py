@@ -96,7 +96,7 @@ class Restaurant(models.Model):
                     for meal in meal_time_list:
                         result += "    >"+ meal.name + "\n"
                 else :
-                    result += "   (조식) : 제공하지 않습니다 ㅠㅠ"
+                    result += "    (조식) : 제공하지 않습니다 ㅠㅠ\n"
                 #중식 리스트
                 meal_time_list = meal_list.filter(time = "lunch")
                 if meal_time_list :
@@ -104,7 +104,7 @@ class Restaurant(models.Model):
                     for meal in meal_time_list:
                         result += "    >"+ meal.name + "\n"
                 else :
-                    result += "   (중식) : 제공하지 않습니다 ㅠㅠ"
+                    result += "    (중식) : 제공하지 않습니다 ㅠㅠ\n"
                 #석식 리스트
                 meal_time_list = meal_list.filter(time = "dinner")
                 if meal_time_list:
@@ -112,9 +112,12 @@ class Restaurant(models.Model):
                     for meal in meal_time_list:
                         result += "    >"+ meal.name + "\n"
                 else :
-                    result += "   (석식) : 제공하지 않습니다 ㅠㅠ"
+                    result += "    (석식) : 제공하지 않습니다 ㅠㅠ\n"
+                # 줄바꿈
+
             else :
-                reult += "오늘 식사가 없습니다 ㅠㅠ\n"
+                result += "오늘 식사가 없습니다 ㅠㅠ\n"
+            result += "\n"+"\n"
         return result
 
 class Comment(models.Model):

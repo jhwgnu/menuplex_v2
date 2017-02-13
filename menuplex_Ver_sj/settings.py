@@ -110,7 +110,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 CRONJOBS = [
-    ('*/0 */1 * *','food.cron.scheduled_job'),
+    ('0 1 * * *','food.cron.scheduled_job'),
 ]
 # 스케쥴 작업
 # 작업 추가 : python manage.py crontab add
