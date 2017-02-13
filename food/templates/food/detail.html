@@ -16,13 +16,13 @@
     <title>Menuplex</title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="../../static/food/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
     <!-- Custom CSS -->
     <link href="../../static/food/modern-business.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
-    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <style>
        #map {
         height: 50px;
@@ -76,14 +76,14 @@
                     {% for meals in restaurant.1 %}
                     {% for meal in meals.1 %}
                     <li class = 'meal' id='{{meal.id}}'>{{ meal.soldout }}
-                        {% if meal.soldout == True %}
+                        {% if meal.soldout == False %}
                             <span id = "span{{ meal.id }}">{{meal}}</span>
                         {% else %}
                             <span id = "span{{ meal.id }}" style="text-decoration:line-through">{{meal}}</span>
                         {% endif %}
                     </li>
                         <div class = "soldout" id="soldout{{ meal.id }}" style="width: 81.7383px; height: 33.2422px;">
-                        {% if meal.soldout == True %}
+                        {% if meal.soldout == False %}
                             <input type="checkbox"  checked data-toggle="toggle" id="toggle{{meal.id}}" name='toggle' data-on="판매중" data-off="매진">
                         {% else %}
                             <input type="checkbox"  unchecked data-toggle="toggle" id="toggle{{meal.id}}" name='toggle' data-on="판매중" data-off="매진">
@@ -164,7 +164,7 @@ var csrftoken = getCookie('csrftoken');
 
         $('.soldout').click(function() {
             var check_div = $(this).children("div");
-            var bool = true;
+            var bool = false;
             if(check_div.attr('class') == "toggle btn btn-primary"){
                 bool = true;
             }
