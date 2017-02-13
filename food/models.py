@@ -264,7 +264,7 @@ class Meal(models.Model):
                                     m_list = menu.select("p")[i].string.split(':') # 0번째 원소 : 식사 시간 // 1번째 원소 : 음식 이름
                                     cls.objects.get_or_create(school = ku, restaurant = rest, name = m_list[1],time = 'lunch', meal_date = t_date)
                                 else :
-                                    cls.objects.get_or_create(school = ku, restaurant = rest, name = menu.select("p")[i].string,time = 'lunch', meal_date = t_date)
+                                    cls.objects.get_or_create(school = ku, restaurant = rest, name = menu.select("p")[i].string ,time = 'lunch', meal_date = t_date)
                         else : # 메뉴가 1개인 식당
                             cls.objects.get_or_create(school = ku , restaurant = rest, name = menu.next.string , time = "lunch", meal_date = t_date)
 
