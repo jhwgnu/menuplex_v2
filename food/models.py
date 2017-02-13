@@ -154,7 +154,7 @@ class Meal(models.Model):
     name = models.CharField(max_length=100)
     time = models.CharField(max_length=10,choices =TIME_CHOICES,default='lunch',)
     meal_date = models.DateField()
-    soldout = models.BooleanField(default=True)
+    soldout = models.BooleanField(default=False)
     def __str__(self):
         return self.name
 

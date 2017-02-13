@@ -93,9 +93,9 @@ def bool(request,shortname):
     meal_pk = request.POST['meal_pk']
 
     if bool == "false":
-        Meal.objects.filter(id=meal_pk).update(soldout=True)
-    else:
         Meal.objects.filter(id=meal_pk).update(soldout=False)
+    else:
+        Meal.objects.filter(id=meal_pk).update(soldout=True)
 
     global check
     check = True
