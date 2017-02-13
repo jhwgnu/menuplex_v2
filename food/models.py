@@ -87,12 +87,7 @@ def lnglat_validator(value):
     if not re.match(r'^([+-]?\d+\.?\d*),([+-]?\d+\.?\d*)$', value):
         raise ValidationError('Invalid LngLat Type')
 
-class Map(models.Model):
-    user = models.ForeignKey(User,on_delete =models.CASCADE)
-    school = models.ForeignKey(School,on_delete =models.CASCADE)
-    rest_name = models.CharField(max_length=500, blank=True)
-    lnglat = models.CharField(max_length=50, blank=True,
-            validators=[lnglat_validator])
+
 
 class Restaurant(models.Model):
     school = models.ForeignKey(School,on_delete =models.CASCADE)
@@ -455,3 +450,13 @@ class Meal(models.Model):
             #행원파크
             rest = Restaurant.objects.get(name = "행원파크")
             crawl_HYU_url("http://www.hanyang.ac.kr/web/www/-253#none",rest)
+
+
+class Map(models.Model):
+    user = models.ForeignKey(User,on_delete =models.CASCADE)
+    school = models.ForeignKey(School,on_delete =models.CASCADE)
+    rest_name = models.ForeignKey(Restaurant,on_delete =models.CASCADE)
+    # 학교랑 관련된 식당만 받으려고 삽질하다가 실패! ㅎㅎㅎㅎㅎ
+    # rest_name = Restaurant.objects.filter(school=school)
+    lnglat = models.CharField(max_length=50, blank=True,
+            validators=[lnglat_validator])
