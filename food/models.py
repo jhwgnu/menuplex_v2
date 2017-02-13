@@ -1,15 +1,18 @@
-import requests, urllib.request, collections, functools
+import requests, urllib.request, collections, functools, re
 from django.core.urlresolvers import reverse
 from bs4 import BeautifulSoup
 from django.db import models
 from datetime import datetime
 from django.core.validators import MinLengthValidator
+from django.contrib.auth.models import User
+
 
 TIME_CHOICES = (
     ('morning', '조식'),
     ('lunch'  , '중식'),
     ('dinner' , '석식'),
 )
+
 
 #날짜를 기준으로 동일 날짜에 한번 연산을 햇으면
 # 메모아이징 시켜서 또 연산 하는 것을 방지해줌
@@ -80,6 +83,16 @@ class School(models.Model):
     def kakaotalk_list(cls,name):
         school = School.objects.get(name = name)
         return "" + name + "\n-----------------------\n" + Restaurant.kakaotalk_rest_list(school)
+def lnglat_validator(value):
+    if not re.match(r'^([+-]?\d+\.?\d*),([+-]?\d+\.?\d*)$', value):
+        raise ValidationError('Invalid LngLat Type')
+
+class Map(models.Model):
+    user = models.ForeignKey(User,on_delete =models.CASCADE)
+    school = models.ForeignKey(School,on_delete =models.CASCADE)
+    rest_name = models.CharField(max_length=500, blank=True)
+    lnglat = models.CharField(max_length=50, blank=True,
+            validators=[lnglat_validator])
 
 class Restaurant(models.Model):
     school = models.ForeignKey(School,on_delete =models.CASCADE)
