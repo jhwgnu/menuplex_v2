@@ -9,6 +9,7 @@
   <li>{{ comment.message }} <small><i>{{ comment.created_at }}</i></small>
 
   {% if comment.user == user %}
+        <a href= "{{comment.id}}/edit/">수정</a>
         <a href= "{{comment.id}}/delete/">삭제</a>
 
   {% endif %}
