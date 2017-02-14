@@ -158,6 +158,7 @@ class Comment(models.Model):
         ordering = ['-id']
 
 
+
 class Meal(models.Model):
     school = models.ForeignKey(School,on_delete =models.CASCADE)
     restaurant = models.ForeignKey(Restaurant,on_delete =models.CASCADE)
@@ -462,3 +463,16 @@ class Map(models.Model):
     # rest_name = Restaurant.objects.filter(school=school)
     lnglat = models.CharField(max_length=50, blank=True,
             validators=[lnglat_validator])
+
+class Mealcomment(models.Model):
+    meal = models.ForeignKey(Meal)
+    message = models.TextField()
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.message
+
+    class Meta:
+        ordering = ['-id']
