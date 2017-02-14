@@ -90,7 +90,7 @@ def comment_delete(request, shortname, restaurant_name, pk):
 
 
 @login_required
-def meal_comments(request, meal_pk):
+def meal_comment(request, shortname, restaurant_name, meal_pk):
     meal = Meal.objects.get(pk=meal_pk)
     if request.method == 'POST':
         form = MealcommentForm(request.POST)
@@ -99,14 +99,16 @@ def meal_comments(request, meal_pk):
             comment.meal = meal
             comment.user = request.user
             comment.save()
-            return redirect('meal_comments', meal_pk=meal.id)
+            return redirect('meal_comment', shortname=shortname, restaurant_name=restaurant_name, meal_pk=meal.id)
     else:
         form = MealcommentForm()
 
-    return render(request, 'food/meal_comments.html', {
+    return render(request, 'food/meal_comment.html', {
         'meal':meal,
         'form':form,
     })
+
+
 
 
 

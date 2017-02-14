@@ -117,7 +117,7 @@
                                 <input type="checkbox"  unchecked data-toggle="toggle" id="toggle{{meal.id}}" name='toggle' data-on="판매중" data-off="매진">
                             {% endif %}
                             </div>
-                            <button type="button" onclick="location.href='{% url 'meal_comments' meal.id %}'">댓글</button>
+                            <button type="button" onclick="location.href='{% url 'meal_comment' meal.school.shortname meal.restaurant.name meal.id  %}'">댓글</button>
                             </br></br>
                         {% endfor %}
                     </li>

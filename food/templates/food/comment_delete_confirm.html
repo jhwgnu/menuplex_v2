@@ -1,4 +1,6 @@
-
+{% extends "layout.html" %}
+{% block content %}
+<h1 style="padding-top: 30px"></h1>
 <form action="" method="post">
     {% csrf_token %}
 
@@ -9,3 +11,5 @@
 
     <input type="submit" value="네" />
 </form>
+
+{% endblock %}

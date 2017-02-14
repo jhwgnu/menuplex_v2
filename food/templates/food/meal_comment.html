@@ -1,4 +1,7 @@
-{{meal.name}}
+{% extends "layout.html" %}
+{% block content %}
+
+<h3 style="padding-top: 30px">{{meal.name}}</h3>
 
 {% if meal.mealcomment_set %}
 <ul>
@@ -13,4 +16,7 @@
     {{ form.as_p }}
 
   <button type="submit"/>저장</button>
+
 </form>
+<button onclick = "location.href='{% url 'detail' meal.restaurant.school.shortname %}'">식단으로 가기</button>
+{% endblock %}

@@ -1,3 +1,5 @@
+{% extends "layout.html" %}
+{% block content %}
 
 <p>history</p>
 {% if meal_history %}
@@ -5,3 +7,5 @@
         <p>최근 나온 날짜 :  {{meal.meal_date}}</p>
     {% endfor %}
 {% endif %}
+
+{% endblock %}

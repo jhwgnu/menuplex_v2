@@ -6,7 +6,7 @@
     <li>아이디 : {{ user }}</li>
     <li>가입일 : {{ user.date_joined }}</li>
 
-    <li>내가 남긴 댓글</li>
+    <li>내가 식당에 남긴 댓글</li>
     {% for comment in user.comment_set.all %}
         {{ comment.message }}
 
@@ -18,7 +18,11 @@
                 삭제
             </a>
         {% endif %}
+    {% endfor %}
 
+    <li>내가 메뉴에 남긴 댓글</li>
+    {% for comment in user.mealcomment_set.all %}
+        {{ comment.message }}
 
     {% endfor %}
 
