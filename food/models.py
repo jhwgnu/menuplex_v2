@@ -5,6 +5,7 @@ from django.db import models
 from datetime import datetime
 from django.core.validators import MinLengthValidator
 from django.contrib.auth.models import User
+from django.conf import settings
 
 
 TIME_CHOICES = (
@@ -145,6 +146,7 @@ class Restaurant(models.Model):
 
 class Comment(models.Model):
     restaurant = models.ForeignKey(Restaurant)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
