@@ -87,8 +87,6 @@ def comment_delete(request, shortname, restaurant_name, pk):
     return render(request, 'food/comment_delete_confirm.html', {
         'comment': comment,
     })
-
-
 @login_required
 def meal_comments(request, meal_pk):
     meal = Meal.objects.get(pk=meal_pk)
@@ -107,9 +105,6 @@ def meal_comments(request, meal_pk):
         'meal':meal,
         'form':form,
     })
-
-
-
 
 def history(request,shortname):
 

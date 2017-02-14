@@ -110,6 +110,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'menuplex_Ver_sj','static'),
+]
+
+STATIC_ROOT = os.path.join(BASE_DIR, '..', 'staticfiles')
+
 CRONJOBS = [
     ('0 1 * * *','food.cron.scheduled_job'),
 ]
