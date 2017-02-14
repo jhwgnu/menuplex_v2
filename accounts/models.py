@@ -5,6 +5,6 @@ from django.db import models
 
 class Profile(models.Model):
     user = models.OneToOneField(User)
-    school = models.CharField(max_length = 10, blank = False)
+    nickname = models.CharField(max_length = 10, blank = False)
 
 

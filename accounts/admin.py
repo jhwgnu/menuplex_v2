@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ['id','user', 'school']
+    list_display = ['id','user', 'nickname']
 
 
 admin.site.register(Profile, ProfileAdmin)
