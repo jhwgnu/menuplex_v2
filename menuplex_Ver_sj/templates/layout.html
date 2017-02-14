@@ -1,15 +1,29 @@
+{% load staticfiles %}
 <!doctype html>
 <html>
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<!-- Bootstrap Core CSS -->
+<link href="{% static  "css/bootstrap.min.css" %}" rel="stylesheet">
+
+    <!-- Custom CSS -->
+<link href="{% static  "css/modern-business.css" %}" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+<link href="{% static  "font-awesome/css/font-awesome.min.css" %}" rel="stylesheet" type="text/css">
+    <!-- toggle css-->
+<link href="{% static  "css/bootstrap-toggle.min.css" %}" rel="stylesheet">
+
 <title>{% block window_title %}{% endblock %}</title>
 <style>
-body {
+ #map {
+  height: 200px;
+  width: 100%;
+ }
+    body {
     background-color: lightgray;
-}
+    }
 </style>
 {% block extra_head %}
 {% endblock %}
@@ -35,8 +49,9 @@ body {
                 <li><a href="{% url "profile" %}">{{ user }}'s 프로필</a></li>
                 <li><a href="{% url "logout" %}?next={{ request.path }}">로그아웃</a></li>
             {% endif %}
-
-
+          <li>
+              <img id="kakao-login" src="{{ MEDIA_URL }}/kakao_login_btn_small.png">
+          </li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -45,9 +60,12 @@ body {
     <h1>{% block title %}{% endblock %}</h1>
 
     {% block content %}
+
     {% endblock %}
 
     <hr/>
     &copy; p.rogramming 2017
+
+
 </body>
 </html>

@@ -17,16 +17,6 @@ TIME_CHOICES = (
 
 #날짜를 기준으로 동일 날짜에 한번 연산을 햇으면
 # 메모아이징 시켜서 또 연산 하는 것을 방지해줌
-def memoize(f):
-    memo = {}
-    def helper(cls,x):
-        t = datetime.today().day
-        if (x,t) not in memo:
-            if f(cls,x):
-                memo[(x,t)] = f(cls,x)
-        return memo[(x,t)]
-    return helper
-
 def memoize1(f):
     memo = {}
     def helper(x):
@@ -37,10 +27,10 @@ def memoize1(f):
         return memo[(x,t)]
     return helper
 
-def memoize_check(f):
+def memoize(f):
     memo = {}
     t = datetime.today().day
-    def helper(cls,x, check):
+    def helper(cls,x, check=False):
         if check :
             if f(cls,x):
                 memo[(x,t)] = f(cls,x)
@@ -56,13 +46,14 @@ class School(models.Model):
     name = models.CharField(max_length=100)
     school_url = models.URLField(max_length=200)
     shortname = models.CharField(max_length=10)
+    logo = models.ImageField()
 
     def __str__(self):
         return self.name
 
     # views.py에서 레스토랑의 이름 - 시간 - 식사 이름 을 출력해주는 창.
     @classmethod
-    @memoize_check
+    @memoize
     def detail_list(cls,school_id,check=False):
         restaurant_list = Restaurant.objects.filter(school_id=school_id)
         meal_list = Meal.objects.filter(school_id=school_id).filter(meal_date=datetime.now())
@@ -84,6 +75,8 @@ class School(models.Model):
     def kakaotalk_list(cls,name):
         school = School.objects.get(name = name)
         return "" + name + "\n-----------------------\n" + Restaurant.kakaotalk_rest_list(school)
+
+
 def lnglat_validator(value):
     if not re.match(r'^([+-]?\d+\.?\d*),([+-]?\d+\.?\d*)$', value):
         raise ValidationError('Invalid LngLat Type')
@@ -174,7 +167,7 @@ class Meal(models.Model):
     @memoize1
     def history(meal_id):
         h_meal = Meal.objects.get(pk=meal_id)
-        return Meal.objects.filter(name = h_meal.name).filter(restaurant = h_meal.restaurant).filter(time = h_meal.time)
+        return Meal.objects.filter(name = h_meal.name).filter(restaurant = h_meal.restaurant).filter(time = h_meal.time).order_by('-id')[:5]
 
     # 학교 별로 묶어놓은 크롤러
     # admin에서 이용하기 위함
