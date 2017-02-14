@@ -49,6 +49,9 @@
                 <li><a href="{% url "profile" %}">{{ user }}'s 프로필</a></li>
                 <li><a href="{% url "logout" %}?next={{ request.path }}">로그아웃</a></li>
             {% endif %}
+          <li>
+              <img id="kakao-login" src="{{ MEDIA_URL }}/kakao_login_btn_small.png">
+          </li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
