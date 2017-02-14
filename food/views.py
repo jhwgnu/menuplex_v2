@@ -25,6 +25,7 @@ def detail(request, shortname):
     # "레스토랑 이름 - 식사 시간 - 식사 이름" 으로 만들어줌.
     global check
     school = School.objects.get(shortname=shortname)
+    #이부분받아오는거작성! 자자이제....
     restaurant_dict = School.detail_list(school.id, check)
     check = False
     context = {'school': school, 'restaurant_dict' : restaurant_dict, 'form' : SoldOutForm,}
