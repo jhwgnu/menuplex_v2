@@ -64,7 +64,7 @@ def comment_edit(request, shortname,restaurant_name, pk):
         if form.is_valid():
             comment = form.save()
             context = {'restaurant': restaurant,'shortname' : shortname, "restaurant_name": restaurant_name,'form' : form,}
-            return render(request,'food/detail_restaurant.html',context)
+            return redirect('restaurant', shortname = shortname, restaurant_name = restaurant_name)
     else :
         form = CommentForm(instance=comment)
         context = {'restaurant': restaurant,'shortname' : shortname, "restaurant_name": restaurant_name,'form' : form,}
@@ -121,6 +121,27 @@ def meal_comment_delete(request, shortname, restaurant_name, meal_pk, pk):
     return render(request, 'food/comment_delete_confirm.html', {
         'comment': comment,
     })
+
+@login_required
+def meal_comment_edit(request, shortname, restaurant_name, meal_pk, pk):
+    comment = Mealcomment.objects.get(pk=pk)
+    meal = Meal.objects.get(pk=meal_pk)
+
+    if comment.user != request.user:
+        messages.warning(request, '댓글 작성자만 수정할 수 있습니다.')
+        return render(request,'food/meal_comment.html')
+
+    if request.method == 'POST':
+        form = MealcommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            comment = form.save()
+            context = {'shortname' : shortname, "restaurant_name": restaurant_name, 'meal_pk' : meal_pk, 'meal' : meal, 'form' : form,}
+            return redirect('meal_comment', shortname=shortname, restaurant_name=restaurant_name, meal_pk=meal_pk)
+    else :
+        form = MealcommentForm(instance=comment)
+        context = {'shortname' : shortname, "restaurant_name": restaurant_name, 'meal_pk' : meal_pk, 'meal' : meal,'form' : form,}
+        return render(request,'food/meal_comment.html',context)
+
 
 def history(request,shortname):
 
