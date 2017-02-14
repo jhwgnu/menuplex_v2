@@ -2,11 +2,11 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
-from food.models import School, Restaurant, Meal, Comment
+from food.models import School, Restaurant, Meal, Comment, Mealcomment
 from datetime import datetime
 from django.template import loader, Context
 from django.template.response import TemplateResponse
-from food.forms import SoldOutForm, CommentForm
+from food.forms import SoldOutForm, CommentForm, MealcommentForm
 import json
 from django.contrib import messages
 
@@ -89,7 +89,24 @@ def comment_delete(request, shortname, restaurant_name, pk):
     })
 
 
+@login_required
+def meal_comments(request, meal_pk):
+    meal = Meal.objects.get(pk=meal_pk)
+    if request.method == 'POST':
+        form = MealcommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.meal = meal
+            comment.user = request.user
+            comment.save()
+            return redirect('meal_comments', meal_pk=meal.id)
+    else:
+        form = MealcommentForm()
 
+    return render(request, 'food/meal_comments.html', {
+        'meal':meal,
+        'form':form,
+    })
 
 
 
@@ -152,4 +169,3 @@ def message(request):
             "buttons" : ["서울대", "고려대", "한양대"]
             }
             })
-

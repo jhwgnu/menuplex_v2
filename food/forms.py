@@ -1,6 +1,6 @@
 from django import forms
 
-from food.models import Meal,Comment
+from food.models import Meal,Comment, Mealcomment
 
 
 class SoldOutForm(forms.ModelForm):
@@ -13,3 +13,7 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ['message']
 
+class MealcommentForm(forms.ModelForm):
+    class Meta:
+        model = Mealcomment
+        fields = ['message']

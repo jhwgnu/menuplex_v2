@@ -11,4 +11,5 @@ urlpatterns = [
     url(r'^(?P<shortname>[a-z]+)/(?P<restaurant_name>[^/]*)/$',views.restaurant_detail,name='restaurant'),
     url(r'^(?P<shortname>[a-z]+)/(?P<restaurant_name>[^/]*)/comments/(?P<pk>\d+)/edit/$', views.comment_edit, name='comment_edit'),
     url(r'^(?P<shortname>[a-z]+)/(?P<restaurant_name>[^/]*)/comments/(?P<pk>\d+)/delete/$', views.comment_delete, name='comment_delete'),
+    url(r'^meal_comments/(?P<meal_pk>\d+)/$',views.meal_comments,name='meal_comments'),
 ]
