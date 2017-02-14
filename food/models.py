@@ -1,9 +1,12 @@
-import requests, urllib.request, collections, functools
+import requests, urllib.request, collections, functools, re
 from django.core.urlresolvers import reverse
 from bs4 import BeautifulSoup
 from django.db import models
 from datetime import datetime
 from django.core.validators import MinLengthValidator
+from django.contrib.auth.models import User
+from django.conf import settings
+
 
 TIME_CHOICES = (
     ('morning', '조식'),
@@ -11,18 +14,9 @@ TIME_CHOICES = (
     ('dinner' , '석식'),
 )
 
+
 #날짜를 기준으로 동일 날짜에 한번 연산을 햇으면
 # 메모아이징 시켜서 또 연산 하는 것을 방지해줌
-def memoize(f):
-    memo = {}
-    def helper(cls,x):
-        t = datetime.today().day
-        if (x,t) not in memo:
-            if f(cls,x):
-                memo[(x,t)] = f(cls,x)
-        return memo[(x,t)]
-    return helper
-
 def memoize1(f):
     memo = {}
     def helper(x):
@@ -33,10 +27,10 @@ def memoize1(f):
         return memo[(x,t)]
     return helper
 
-def memoize_check(f):
+def memoize(f):
     memo = {}
     t = datetime.today().day
-    def helper(cls,x, check):
+    def helper(cls,x, check=False):
         if check :
             if f(cls,x):
                 memo[(x,t)] = f(cls,x)
@@ -58,7 +52,7 @@ class School(models.Model):
 
     # views.py에서 레스토랑의 이름 - 시간 - 식사 이름 을 출력해주는 창.
     @classmethod
-    @memoize_check
+    @memoize
     def detail_list(cls,school_id,check=False):
         restaurant_list = Restaurant.objects.filter(school_id=school_id)
         meal_list = Meal.objects.filter(school_id=school_id).filter(meal_date=datetime.now())
@@ -80,6 +74,13 @@ class School(models.Model):
     def kakaotalk_list(cls,name):
         school = School.objects.get(name = name)
         return "" + name + "\n-----------------------\n" + Restaurant.kakaotalk_rest_list(school)
+
+
+def lnglat_validator(value):
+    if not re.match(r'^([+-]?\d+\.?\d*),([+-]?\d+\.?\d*)$', value):
+        raise ValidationError('Invalid LngLat Type')
+
+
 
 class Restaurant(models.Model):
     school = models.ForeignKey(School,on_delete =models.CASCADE)
@@ -137,6 +138,7 @@ class Restaurant(models.Model):
 
 class Comment(models.Model):
     restaurant = models.ForeignKey(Restaurant)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -163,7 +165,7 @@ class Meal(models.Model):
     @memoize1
     def history(meal_id):
         h_meal = Meal.objects.get(pk=meal_id)
-        return Meal.objects.filter(name = h_meal.name).filter(restaurant = h_meal.restaurant).filter(time = h_meal.time)
+        return Meal.objects.filter(name = h_meal.name).filter(restaurant = h_meal.restaurant).filter(time = h_meal.time).order_by('-id')[:5]
 
     # 학교 별로 묶어놓은 크롤러
     # admin에서 이용하기 위함
@@ -442,3 +444,13 @@ class Meal(models.Model):
             #행원파크
             rest = Restaurant.objects.get(name = "행원파크")
             crawl_HYU_url("http://www.hanyang.ac.kr/web/www/-253#none",rest)
+
+
+class Map(models.Model):
+    user = models.ForeignKey(User)
+    school = models.ForeignKey(School)
+    rest_name = models.ForeignKey(Restaurant)
+    # 학교랑 관련된 식당만 받으려고 삽질하다가 실패! ㅎㅎㅎㅎㅎ
+    # rest_name = Restaurant.objects.filter(school=school)
+    lnglat = models.CharField(max_length=50, blank=True,
+            validators=[lnglat_validator])

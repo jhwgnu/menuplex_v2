@@ -11,17 +11,17 @@
     {% for comment in restaurant.comment_set.all %}
         <li>
             {{ comment.message }}
-            at {{ comment.created_at }}
+            at {{ comment.created_at }} by {{ comment.user }}
 
 
-
-            <a href="{% url "comment_edit" shortname restaurant_name comment.pk %}">
-                수정
-            </a>
-            <a href="{% url "comment_delete" shortname restaurant_name comment.pk %}">
-                삭제
-            </a>
-
+            {% if comment.user == user %}
+                <a href="{% url "comment_edit" shortname restaurant_name comment.pk %}">
+                    수정
+                </a>
+                <a href="{% url "comment_delete" shortname restaurant_name comment.pk %}">
+                    삭제
+                </a>
+            {% endif %}
 
 
         </li>
