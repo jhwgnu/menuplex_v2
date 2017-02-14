@@ -13,5 +13,5 @@ urlpatterns = [
     url(r'^(?P<shortname>[a-z]+)/(?P<restaurant_name>[^/]*)/comments/(?P<pk>\d+)/delete/$', views.comment_delete, name='comment_delete'),
     url(r'^(?P<shortname>[a-z]+)/(?P<restaurant_name>[^/]*)/(?P<meal_pk>\d+)/mealcomment/$', views.meal_comment, name='meal_comment'),
     url(r'^(?P<shortname>[a-z]+)/(?P<restaurant_name>[^/]*)/(?P<meal_pk>\d+)/mealcomment/(?P<pk>\d+)/delete/$', views.meal_comment_delete, name='meal_comment_delete'),
-    #url(r'^(?P<shortname>[a-z]+)/(?P<restaurant_name>[^/]*)/(?P<meal_pk>\d+)/mealcomment/(?P<pk>\d+)/edit/$', views.meal_comment_edit, name='meal_comment_edit'),
+    url(r'^(?P<shortname>[a-z]+)/(?P<restaurant_name>[^/]*)/(?P<meal_pk>\d+)/mealcomment/(?P<pk>\d+)/edit/$', views.meal_comment_edit, name='meal_comment_edit'),
 ]

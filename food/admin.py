@@ -1,18 +1,11 @@
 from django.contrib import admin
-from food.models import School,Restaurant,Meal,Comment,Map, Mealcomment
+from food.models import School,Restaurant,Meal,Comment,Mealcomment
 
 ## admin 페이지에 크롤링 버튼을 만들고자 함
 ## 방법을 아직 모르겠음.
 
-
-class MapAdmin(admin.ModelAdmin):
-    list_display = ['user', 'school','lnglat','rest_name']
-    list_display_links = ['user']
-    list_filter = ['school']
-
-
 class SchoolAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'school_url']
+    list_display = ['id', 'name', 'school_url','center']
     list_display_links = ['id','name']
     search_fields = ['name']
     actions = ['crawl']
@@ -25,7 +18,7 @@ class SchoolAdmin(admin.ModelAdmin):
 
 
 class RestaurantAdmin(admin.ModelAdmin):
-    list_display = ['id','name','location','school']
+    list_display = ['id','name','location','school','lnglat']
     list_display_links = ['id','name']
     list_filter = ['school']
     search_fields = ['name']
@@ -52,5 +45,4 @@ admin.site.register(School, SchoolAdmin)
 admin.site.register(Restaurant,RestaurantAdmin)
 admin.site.register(Meal, MealAdmin)
 admin.site.register(Comment, CommentAdmin)
-admin.site.register(Map, MapAdmin)
 admin.site.register(Mealcomment)
