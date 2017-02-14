@@ -81,8 +81,9 @@
     <!--버튼용 -->
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    <script src="../../static/jquery.csrf.js"></script>
 
-    <div class="container">
+    <div class="container" style="display: inline-block">
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header">
@@ -104,7 +105,7 @@
                         {% for meal  in meals.1 %}
                         <li class = 'meal' id='{{meal.id}}'>
                             {% if meal.soldout == False %}
-                                <span id = "span{{ meal.id }}">{{meal}}</span>
+                                <span id = "span{{ meal.id }}"><a href="{% url 'meal_comments' meal.id %}">{{meal}}</a></span>
                             {% else %}
                                 <span id = "span{{ meal.id }}" style="text-decoration:line-through">{{meal}}</span>
                             {% endif %}
@@ -126,27 +127,12 @@
           </ul>
             {% endif %}
         </div>
+    </div>
 
 
 
 <script>
-// using jQuery
-function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = jQuery.trim(cookies[i]);
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-var csrftoken = getCookie('csrftoken');
+
     $(document).ready(function(){
         $('.meal').click(function(){
             var t = $(this)[0];
@@ -178,41 +164,48 @@ var csrftoken = getCookie('csrftoken');
         $('.soldout').click(function() {
             var check_div = $(this).children("div");
             var bool = false;
-            if(check_div.attr('class') == "toggle btn btn-primary"){
+            if(check_div.attr('class') == "toggle btn btn-primary btn-xs" || check_div.attr('class') == "toggle btn btn-xs btn-primary"){
                 bool = true;
             }
             else{
                 bool = false;
             }
-            alert("판매상태가 바뀝니다.");
+            var check_input;
+            check_input = false;
+            check_input = confirm("정말 바꾸시겠습니까?");
             var get_id = $(this).attr('id');
             var get_id_d = get_id.replace("soldout", "");
             var get_id_r = get_id.replace("soldout", "span");
             var get_id_r = "#"+get_id_r;
-            if(bool == true){
-                $(get_id_r).attr("style", "text-decoration:line-through");
-            }
-            else{
-                $(get_id_r).attr("style", "");
-            }
+            if(check_input == true) {
+                if (bool == true) {
+                    $(get_id_r).attr("style", "text-decoration:line-through");
+                }
+                else {
+                    $(get_id_r).attr("style", "");
+                }
 
-            $.ajax({
-                url: 'bool/',
-                type: 'POST',
-                data: {
-                    'bool': bool,
-                    'meal_pk' : get_id_d,
-                    csrfmiddlewaretoken: '{{ csrf_token }}'
-                },
-                dataType: 'json',
-                // complete: function (data) {
-                //     alert("바뀜 성공");
-                // }
-            });
+                $.ajax({
+                    url: 'bool/',
+                    type: 'POST',
+                    data: {
+                        'bool': bool,
+                        'meal_pk': get_id_d,
+                    },
+                    dataType: 'json',
+                    // complete: function (data) {
+                    //     alert("바뀜 성공");
+                    // }
+                });
+            }
+            else {
+                var toogle_id = "#" + get_id.replace("soldout", "toggle");
+                $(toogle_id).bootstrapToggle('toggle');
+            }
          });
     });
 
 </script>
-</body>
+  </body>
 </html>
 {% endblock %}

@@ -1,0 +1,16 @@
+{{meal.name}}
+
+{% if meal.mealcomment_set %}
+<ul>
+{% for comment in meal.mealcomment_set.all %}
+  <li>{{ comment.message }} <small><i>{{ comment.created_at }}</i></small></li>
+{% endfor %}
+</ul>
+{% endif %}
+<form action="" method="POST">
+  {% csrf_token %}
+
+    {{ form.as_p }}
+
+  <button type="submit"/>저장</button>
+</form>
