@@ -104,7 +104,7 @@
                         {% for meal  in meals.1 %}
                         <li class = 'meal' id='{{meal.id}}'>
                             {% if meal.soldout == False %}
-                                <span id = "span{{ meal.id }}"><a href="{% url 'meal_comments' meal.id %}">{{meal}}</a></span>
+                                <span id = "span{{ meal.id }}">{{meal}}</span>
                             {% else %}
                                 <span id = "span{{ meal.id }}" style="text-decoration:line-through">{{meal}}</span>
                             {% endif %}
@@ -116,7 +116,9 @@
                                 <input type="checkbox"  unchecked data-toggle="toggle" id="toggle{{meal.id}}" name='toggle' data-on="판매중" data-off="매진">
                             {% endif %}
                             </div>
-                          {% endfor %}
+                            <button type="button" onclick="location.href='{% url 'meal_comments' meal.id %}'">댓글</button>
+                        {% endfor %}
+                        </br></br>
                     </li>
                     {% endfor %}
                     </div>
