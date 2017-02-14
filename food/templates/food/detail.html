@@ -36,21 +36,22 @@
     <div id="map"></div>
     <script>
       function initMap() {
-        var school = {lat: 37.45886, lng: 126.95};
         var map = new google.maps.Map(document.getElementById('map'), {
           zoom: 14,
-          center: school,
+          center: {lat: 37.45886, lng: 126.95}
           // 나중에 얘 손봐야 함. one to one 키였나? 암튼 식당이랑 다르게 학교당 하나만 받으면 됨니당~
         });
         setMarkers(map);
-      }
-    function setMarkers(map){
+    }
+
         var restaurants=[
         ['자하연 식당',37.4610126,126.9501219],
         ['감골 식당',37.4637651,126.9490199],
         ['동원관',37.4640802,126.9495671],
         ['302 식당',37.4502747,126.9534753],
         ];
+
+    function setMarkers(map){
       for (var i = 0; i < restaurants.length; i++) {
         var restaurant = restaurants[i];
         var marker = new google.maps.Marker({
@@ -59,18 +60,19 @@
         map: map,
         title:restaurant[0],
         position:{lat:restaurant[1], lng:restaurant[2]},
-        marker.addListener('click', toggleBounce);
+        // marker.addListener('click', toggleBounce),
       });
 
     }
-    function toggleBounce() {
-      if (marker.getAnimation() !== null) {
-        marker.setAnimation(null);
-      } else {
-        marker.setAnimation(google.maps.Animation.BOUNCE);
-      }
-    }
-  }
+}
+    // function toggleBounce() {
+    //   if (marker.getAnimation() !== null) {
+    //     marker.setAnimation(null);
+    //   } else {
+    //     marker.setAnimation(google.maps.Animation.BOUNCE);
+    //   }
+    // }
+
     </script>
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJG-bVA-9JCqT9FVFoYz5OWRfRr0g9LhQ&callback=initMap">
@@ -88,51 +90,45 @@
                 </h1>
             </div>
             {% if restaurant_dict %}
+            <ul>
             {% for restaurant in restaurant_dict %}
-            <div class="col-md-4">
+            <div class="col-md-4" style="display:inline-block;">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h4><i class="fa fa-fw fa-check"></i><a href="{% url 'restaurant' school.shortname restaurant.0 %}">{{restaurant.0}}</a></h4>
+                        <h4><i class="fa fa-fw fa-check"></i><a href="{% url 'restaurant' school.shortname restaurant.0 %}">{{restaurant.0}}</a>
+                        <a href="#" class="btn btn-default">Map</a></h4>
                     </div>
                     <div class="panel-body">
+                    <ol>
                     {% for meals in restaurant.1 %}
-                    {% for meal in meals.1 %}
-                    <li class = 'meal' id='{{meal.id}}'>{{ meal.soldout }}
-                        {% if meal.soldout == False %}
-                            <span id = "span{{ meal.id }}">{{meal}}</span>
-                        {% else %}
-                            <span id = "span{{ meal.id }}" style="text-decoration:line-through">{{meal}}</span>
-                        {% endif %}
-                    </li>
-                        <div class = "soldout" id="soldout{{ meal.id }}" style="width: 81.7383px; height: 33.2422px;">
-                        {% if meal.soldout == False %}
-                            <input type="checkbox"  checked data-toggle="toggle" id="toggle{{meal.id}}" name='toggle' data-on="판매중" data-off="매진">
-                        {% else %}
-                            <input type="checkbox"  unchecked data-toggle="toggle" id="toggle{{meal.id}}" name='toggle' data-on="판매중" data-off="매진">
-                        {% endif %}
-                        </div>
-                    {% endfor %}
-                    <!-- <li>
-                        {{meals.0}}
+                    <li>
+                        <strong>{{meals.0}}</strong>
                         <ul>
-                            {% for meal in meals.1 %}
-                            <li class = 'meal' id='{{meal.id}}'>
-                                {{meal}}
-                            </li>
-                            <table>
-                            <form action="" method="get">
-                            <table>{{ form.as_table }}</table>
-                            </form>
-                            </table>
-                            {% endfor %}
+                        {% for meal  in meals.1 %}
+                        <li class = 'meal' id='{{meal.id}}'>
+                            {% if meal.soldout == False %}
+                                <span id = "span{{ meal.id }}">{{meal}}</span>
+                            {% else %}
+                                <span id = "span{{ meal.id }}" style="text-decoration:line-through">{{meal}}</span>
+                            {% endif %}
+                        </li>
+                            <div class = "soldout" id="soldout{{ meal.id }}" style="width: 81.7383px; height: 33.2422px;">
+                            {% if meal.soldout == False %}
+                                <input type="checkbox"  checked data-toggle="toggle" id="toggle{{meal.id}}" name='toggle' data-size="mini" data-on="판매중" data-off="매진">
+                            {% else %}
+                                <input type="checkbox"  unchecked data-toggle="toggle" id="toggle{{meal.id}}" name='toggle' data-on="판매중" data-off="매진">
+                            {% endif %}
+                            </div>
+                          {% endfor %}
                         </ul>
                     </li>
-                    {% endfor %} -->
-                    <a href="#" class="btn btn-default">Map</a>
+                    {% endfor %}
+                    </ol>
                     </div>
                 </div>
             </div>
             {% endfor %}
+          </ul>
             {% endif %}
         </div>
 
@@ -193,7 +189,7 @@ var csrftoken = getCookie('csrftoken');
             else{
                 bool = false;
             }
-            alert("판매상태가 바뀝니다." + bool);
+            alert("판매상태가 바뀝니다.");
             var get_id = $(this).attr('id');
             var get_id_d = get_id.replace("soldout", "");
             var get_id_r = get_id.replace("soldout", "span");
@@ -214,9 +210,9 @@ var csrftoken = getCookie('csrftoken');
                     csrfmiddlewaretoken: '{{ csrf_token }}'
                 },
                 dataType: 'json',
-                complete: function (data) {
-                    alert("바뀜 성공");
-                }
+                // complete: function (data) {
+                //     alert("바뀜 성공");
+                // }
             });
          });
     });
