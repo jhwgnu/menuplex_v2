@@ -88,7 +88,7 @@ def comment_delete(request, shortname, restaurant_name, pk):
         'comment': comment,
     })
 @login_required
-def meal_comments(request, meal_pk):
+def meal_comment(request, shortname, restaurant_name, meal_pk):
     meal = Meal.objects.get(pk=meal_pk)
     if request.method == 'POST':
         form = MealcommentForm(request.POST)
@@ -97,13 +97,29 @@ def meal_comments(request, meal_pk):
             comment.meal = meal
             comment.user = request.user
             comment.save()
-            return redirect('meal_comments', meal_pk=meal.id)
+            return redirect('meal_comment', shortname=shortname, restaurant_name=restaurant_name, meal_pk=meal.id)
     else:
         form = MealcommentForm()
 
-    return render(request, 'food/meal_comments.html', {
+    return render(request, 'food/meal_comment.html', {
         'meal':meal,
         'form':form,
+    })
+
+@login_required
+def meal_comment_delete(request, shortname, restaurant_name, meal_pk, pk):
+    comment = Mealcomment.objects.get(pk=pk)
+
+    if comment.user != request.user:
+        messages.warning(request, '댓글 작성자만 삭제할 수 있습니다.')
+        return render(request,'food/meal_comment.html')
+
+    if request.method == 'POST':
+        comment.delete()
+        return redirect('meal_comment', shortname=shortname, restaurant_name=restaurant_name, meal_pk=meal_pk)
+
+    return render(request, 'food/comment_delete_confirm.html', {
+        'comment': comment,
     })
 
 def history(request,shortname):
