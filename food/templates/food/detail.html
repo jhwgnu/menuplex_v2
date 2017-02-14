@@ -193,7 +193,7 @@ var csrftoken = getCookie('csrftoken');
             else{
                 bool = false;
             }
-            alert("판매상태가 바뀝니다." + bool);
+            alert("판매상태가 바뀝니다.");
             var get_id = $(this).attr('id');
             var get_id_d = get_id.replace("soldout", "");
             var get_id_r = get_id.replace("soldout", "span");
@@ -214,9 +214,9 @@ var csrftoken = getCookie('csrftoken');
                     csrfmiddlewaretoken: '{{ csrf_token }}'
                 },
                 dataType: 'json',
-                complete: function (data) {
-                    alert("바뀜 성공");
-                }
+                // complete: function (data) {
+                //     alert("바뀜 성공");
+                // }
             });
          });
     });
