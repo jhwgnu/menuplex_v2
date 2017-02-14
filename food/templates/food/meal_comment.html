@@ -13,16 +13,7 @@
         <a href= "{{comment.id}}/delete/">삭제</a>
 
   {% endif %}
-
-
-
   </li>
-
-
-
-
-
-
 {% endfor %}
 </ul>
 {% endif %}
@@ -35,4 +26,5 @@
 
 </form>
 <button onclick = "location.href='{% url 'detail' meal.restaurant.school.shortname %}'">식단으로 가기</button>
+
 {% endblock %}
