@@ -99,11 +99,8 @@
                         <a href="#" class="btn btn-default">Map</a></h4>
                     </div>
                     <div class="panel-body">
-                    <ol>
                     {% for meals in restaurant.1 %}
-                    <li>
-                        <strong>{{meals.0}}</strong>
-                        <ul>
+                        <h4><strong>{{meals.0}}</strong></h4>
                         {% for meal  in meals.1 %}
                         <li class = 'meal' id='{{meal.id}}'>
                             {% if meal.soldout == False %}
@@ -120,10 +117,8 @@
                             {% endif %}
                             </div>
                           {% endfor %}
-                        </ul>
                     </li>
                     {% endfor %}
-                    </ol>
                     </div>
                 </div>
             </div>
