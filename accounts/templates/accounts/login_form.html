@@ -1,7 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+{% extends "layout.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+
+<h1 style="padding-top: 30px"></h1>
+
+
 <form action="" method="post">
     {% csrf_token %}
     <table>
         {{ form.as_table }}
     </table>
     <input type="submit" />
+
+
 </form>
+
+
+
+{% endblock %}
+
+</html>
+

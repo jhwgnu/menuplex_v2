@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.shortcuts import redirect, render
 from accounts.forms import SignupForm
-
+from .models import Profile
 
 def signup(request):
     if request.method == 'POST':
@@ -17,5 +17,7 @@ def signup(request):
 
 
 def profile(request):
+    # profile = Profile.objects.get(id=user_id)
+    # shortname restaurant_name comment.pk
     return render(request, 'accounts/profile.html')
 

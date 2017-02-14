@@ -11,7 +11,7 @@
     {% for comment in restaurant.comment_set.all %}
         <li>
             {{ comment.message }}
-            at {{ comment.created_at }} by {{ comment.user }}
+            at {{ comment.created_at }} by {{ comment.user.profile.nickname }}
 
 
             {% if comment.user == user %}
