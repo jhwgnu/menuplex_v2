@@ -3,14 +3,13 @@
 Menuplex
 {% endblock %}
 {% block map %}
-{% endblock %}
+
 <style>
    #map {
     height: 200px;
     width: 200%;
    }
 </style>
-    <h3>Your School Maps</h3>
     <div id="map"></div>
 <script>
       function initMap() {
@@ -20,6 +19,7 @@ Menuplex
         });
         // setMarkers(map);
     }
+
 
 //         var restaurants=[
 
@@ -43,7 +43,7 @@ Menuplex
 <script async defer
 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJG-bVA-9JCqT9FVFoYz5OWRfRr0g9LhQ&callback=initMap">
 </script>
-
+{% endblock %}
 {% block content %}
 <div class="container" style="display: inline-block">
 <div class="row">
