@@ -54,10 +54,10 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJG-bVA-9JCqT9FVFoYz5OWRf
     <div class="col-md-4" style="display:inline-block;">
         <div class="panel panel-default">
             <div class="panel-heading" style="border-style: solid">
-                <h4><i class="fa fa-fw fa-check"></i><a href="{% url 'restaurant' school.shortname restaurant.0 %}">{{restaurant.0}}</a>
+                <h4><i class="fa fa-fw fa-check"></i><a href="{% url 'restaurant' school.shortname restaurant.0 %}" style="color:#1B1189">{{restaurant.0}}</a>
                 <a href="#" class="btn btn-default">Map</a></h4>
             </div>
-            <div class="panel-body">
+            <div class="panel-body" style="border-style: solid; border-color:#E5E5E5">
             {% for meals in restaurant.1 %}
                 <h4><strong>{{meals.0}}</strong></h4>
                 {% for meal  in meals.1 %}
