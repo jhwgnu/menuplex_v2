@@ -18,12 +18,10 @@
 </script>
 
 <script>
-//구글맵용 Script
 function initMap() {
     var map = new google.maps.Map(document.getElementById('map'), {
       zoom: 14,
       center: {lat: 37.45886, lng: 126.95}
-      // 나중에 얘 손봐야 함. one to one 키였나? 암튼 식당이랑 다르게 학교당 하나만 받으면 됨니당~
     });
     setMarkers(map);
 }
