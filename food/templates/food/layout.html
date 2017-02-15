@@ -5,46 +5,15 @@
 {{ block.super }}
 
 <!--Jquery-->
+
+
 <script src="{% static "food/js/jquery-3.1.1.min.js" %}"></script>
 <script src="{% static "food/js/bootstrap-toggle.min.js" %}"></script>
+<script src="{% static "food/js/bootstrap-ui.min.js" %}"></script>
 <script src="{% static "jquery.csrf.js" %}"></script>
-<script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJG-bVA-9JCqT9FVFoYz5OWRfRr0g9LhQ&callback=initMap">
-</script>
+
 
 <script>
-//구글맵용 Script
-function initMap() {
-    var map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 14,
-      center: {lat: 37.45886, lng: 126.95}
-      // 나중에 얘 손봐야 함. one to one 키였나? 암튼 식당이랑 다르게 학교당 하나만 받으면 됨니당~
-    });
-    setMarkers(map);
-}
-
-    var restaurants=[
-    ['자하연 식당',37.4610126,126.9501219],
-    ['감골 식당',37.4637651,126.9490199],
-    ['동원관',37.4640802,126.9495671],
-    ['302 식당',37.4502747,126.9534753],
-    ];
-
-function setMarkers(map){
-  for (var i = 0; i < restaurants.length; i++) {
-    var restaurant = restaurants[i];
-    var marker = new google.maps.Marker({
-    animation: google.maps.Animation.DROP,
-    draggable: true,
-    map: map,
-    title:restaurant[0],
-    position:{lat:restaurant[1], lng:restaurant[2]},
-    // marker.addListener('click', toggleBounce),
-  });
-
-    }
-}
-
 $(document).ready(function(){
     $('.meal').click(function(){
         var t = $(this)[0];
@@ -117,8 +86,5 @@ $(document).ready(function(){
          });
     });
 </script>
-{% endblock %}
-
-{% block content %}
 
 {% endblock %}

@@ -1,29 +1,19 @@
-<!DOCTYPE html>
-<html lang="ko">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 {% extends "layout.html" %}
-
 {% block content %}
-<!DOCTYPE html>
-
-
-<h2>학교 리스트</h2>
-
-{% if school_list %}
-    <ul>
-        {% for school in school_list %}
-        <li><a href="{% url 'detail' school.shortname %}">
-            {{ school.name }}
-        </a>
-        <br>
-            URL : {{ school.school_url }}
-        </li>
-        {% endfor%}
-    </ul>
-{% else %}
-    <p> no school </p>
-{% endif %}
-
+        <div class="container">
+            <div class="row">
+                {% for school in school_list %}
+                <div class="col-sm-4 portfolio-item">
+                    <a href="#portfolioModal1" class="portfolio-link" data-toggle="modal">
+                        <div class="caption">
+                            <div class="caption-content">
+                                <i class="fa fa-search-plus fa-3x"></i>
+                            </div>
+                        </div>
+                        <a href="{% url 'detail' school.shortname %}"><img src = "{{ school.logo.url }}" class="img-responsive" alt=""></a>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
 {% endblock %}
-
-</html>

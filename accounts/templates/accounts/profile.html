@@ -4,7 +4,8 @@
 
 <ul>
     <li>아이디 : {{ user }}</li>
-    <li>가입일 : {{ user.date_joined }}</li>
+    <li>닉네임 : {{ user.profile.nickname }}</li>
+    <li>가입일 : {{ user.date_joined }}</li></br>
 
     <li>내가 남긴 댓글</li>
     {% for comment in user.comment_set.all %}
@@ -16,8 +17,24 @@
             </a>
             <a href="{% url "comment_delete" comment.restaurant.school.shortname comment.restaurant.name comment.pk %}">
                 삭제
-            </a>
+            </a></br>
         {% endif %}
+
+    <br><li>내가 메뉴에 남긴 댓글</li>
+    {% for comment in user.mealcomment_set.all %}
+        {{ comment.message }}
+
+        {% if comment.user == user %}
+            <a href="{% url "meal_comment_edit" comment.meal.school.shortname comment.restaurant.name comment.meal.pk comment.pk %}">
+                수정
+            </a>
+            <a href="{% url "meal_comment_delete" comment.meal.school.shortname comment.restaurant.name comment.meal.pk comment.pk %}">
+                삭제
+            </a></br>
+        {% endif %}
+
+
+    {% endfor %}
 
 
     {% endfor %}

@@ -19,7 +19,9 @@ def lnglat_validator(value):
         raise ValidationError('Invalid LngLat Type')
 
 
-
+def lnglat_validator(value):
+    if not re.match(r'^([+-]?\d+\.?\d*),([+-]?\d+\.?\d*)$', value):
+        raise ValidationError('Invalid LngLat Type')
 #날짜를 기준으로 동일 날짜에 한번 연산을 햇으면
 # 메모아이징 시켜서 또 연산 하는 것을 방지해줌
 def memoize1(f):
@@ -52,8 +54,7 @@ class School(models.Model):
     school_url = models.URLField(max_length=200)
     shortname = models.CharField(max_length=10)
     logo = models.ImageField()
-    lnglat = models.CharField(max_length=50, blank=True,
-            validators=[lnglat_validator])
+    center = models.CharField(max_length=50, blank=True,validators=[lnglat_validator])
 
     def __str__(self):
         return self.name
@@ -88,6 +89,7 @@ class Restaurant(models.Model):
     school = models.ForeignKey(School,on_delete =models.CASCADE)
     name = models.CharField(max_length=100)
     location = models.CharField(max_length=100)
+
     lnglat = models.CharField(max_length=50, blank=True,
         validators=[lnglat_validator])
 
@@ -449,14 +451,6 @@ class Meal(models.Model):
             #행원파크
             rest = Restaurant.objects.get(name = "행원파크")
             crawl_HYU_url("http://www.hanyang.ac.kr/web/www/-253#none",rest)
-
-
-class Map(models.Model):
-    user = models.ForeignKey(User)
-    school = models.ForeignKey(School)
-    rest_name = models.ForeignKey(Restaurant)
-    # 학교랑 관련된 식당만 받으려고 삽질하다가 실패! ㅎㅎㅎㅎㅎ
-    # rest_name = Restaurant.objects.filter(school=school)
 
 class Mealcomment(models.Model):
     meal = models.ForeignKey(Meal)

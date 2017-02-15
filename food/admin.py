@@ -1,6 +1,7 @@
 from django.contrib import admin
-from food.models import School,Restaurant,Meal,Comment, Mealcomment
-from mapwidgets.widgets import GooglePointFieldInlineWidget
+
+from food.models import School,Restaurant,Meal,Comment,Mealcomment
+
 ## admin 페이지에 크롤링 버튼을 만들고자 함
 ## 방법을 아직 모르겠음.
 
@@ -15,18 +16,12 @@ class SchoolAdmin(admin.ModelAdmin):
         self.message_user(request, '수행!!')
         pass
     crawl.short_description = '지정 학교를 크롤링합니다.'
-    formfield_overrides = {
-models.PointField: {"widget": GooglePointFieldInlineWidget}
-}
 
 class RestaurantAdmin(admin.ModelAdmin):
-    list_display = ['id','name','location','school']
+    list_display = ['id','name','location','school','lnglat']
     list_display_links = ['id','name']
     list_filter = ['school']
     search_fields = ['name']
-    formfield_overrides = {
-    models.PointField: {"widget": GooglePointFieldWidget}
-    }
 
 
 class MealAdmin(admin.ModelAdmin):
@@ -51,3 +46,4 @@ admin.site.register(Restaurant,RestaurantAdmin)
 admin.site.register(Meal, MealAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Mealcomment)
+
