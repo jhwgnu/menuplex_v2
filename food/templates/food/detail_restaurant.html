@@ -10,8 +10,9 @@
     <ul>
     {% for comment in restaurant.comment_set.all %}
         <li>
+           {{ comment.user.profile.nickname }} :
             {{ comment.message }}
-            at {{ comment.created_at }} by {{ comment.user.profile.nickname }}
+            at {{ comment.created_at }}
 
 
             {% if comment.user == user %}
