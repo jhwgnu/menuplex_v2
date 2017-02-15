@@ -26,8 +26,10 @@ def detail(request, shortname):
     global check
     school = School.objects.get(shortname=shortname)
     restaurant_dict = School.detail_list(school.id, check)
+    lnglat=school.center.split(',')
     check = False
-    context = {'school': school, 'restaurant_dict' : restaurant_dict, 'form' : SoldOutForm,}
+
+    context = {'school': school, 'restaurant_dict' : restaurant_dict, 'form' : SoldOutForm,'lng' : lnglat[1], 'lat' : lnglat[0]}
 
     return render(request,'food/detail.html',context)
 
