@@ -13,6 +13,11 @@ TIME_CHOICES = (
     ('lunch'  , '중식'),
     ('dinner' , '석식'),
 )
+## 유효성 검사
+def lnglat_validator(value):
+    if not re.match(r'^([+-]?\d+\.?\d*),([+-]?\d+\.?\d*)$', value):
+        raise ValidationError('Invalid LngLat Type')
+
 
 def lnglat_validator(value):
     if not re.match(r'^([+-]?\d+\.?\d*),([+-]?\d+\.?\d*)$', value):
@@ -50,6 +55,7 @@ class School(models.Model):
     shortname = models.CharField(max_length=10)
     logo = models.ImageField()
     center = models.CharField(max_length=50, blank=True,validators=[lnglat_validator])
+
     def __str__(self):
         return self.name
 
@@ -83,7 +89,10 @@ class Restaurant(models.Model):
     school = models.ForeignKey(School,on_delete =models.CASCADE)
     name = models.CharField(max_length=100)
     location = models.CharField(max_length=100)
-    lnglat = models.CharField(max_length=50, blank=True,validators=[lnglat_validator])
+
+    lnglat = models.CharField(max_length=50, blank=True,
+        validators=[lnglat_validator])
+
     def __str__(self):
         return self.name
 
