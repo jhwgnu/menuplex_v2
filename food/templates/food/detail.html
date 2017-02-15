@@ -6,7 +6,7 @@ Menuplex
 
 <style>
    #map {
-    height: 200px;
+    height: 350px;
     width: 200%;
    }
 </style>
@@ -15,29 +15,30 @@ Menuplex
       function initMap() {
         var map = new google.maps.Map(document.getElementById('map'), {
           zoom: 14,
-          center: {lat: 37.45886, lng: 126.95}
+          center: {lat: {{lat}}, lng: {{lng}}}
         });
-        // setMarkers(map);
+        setMarkers(map);
     }
 
 
-//         var restaurants=[
+        // var restaurants=[
 
-//         ];
+        // ];
 
-//     function setMarkers(map){
-//       for (var i = 0; i < restaurants.length; i++) {
-//         var restaurant = restaurants[i];
-//         var marker = new google.maps.Marker({
-//         animation: google.maps.Animation.DROP,
-//         draggable: true,
-//         map: map,
-//         title:restaurant[0],
-//         position:{lat:restaurant[1], lng:restaurant[2]},
-//         });
+    function setMarkers(map){
+        map:map
+    //   for (var i = 0; i < restaurants.length; i++) {
+    //     var restaurant = restaurants[i];
+    //     var marker = new google.maps.Marker({
+    //     animation: google.maps.Animation.DROP,
+    //     draggable: true,
+    //     map: map,
+    //     title:restaurant[0],
+    //     position:{lat:restaurant[1], lng:restaurant[2]},
+    //     });
 
-//     }
-// }
+    // }
+}
 
 </script>
 <script async defer
