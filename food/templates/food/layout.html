@@ -5,9 +5,49 @@
 {{ block.super }}
 
 <!--Jquery-->
+
 <script src="{% static "food/js/jquery-3.1.1.min.js" %}"></script>
 <script src="{% static "food/js/bootstrap-toggle.min.js" %}"></script>
 <script src="{% static "jquery.csrf.js" %}"></script>
+
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJG-bVA-9JCqT9FVFoYz5OWRfRr0g9LhQ&callback=initMap">
+</script>
+
+<script>
+    function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 14,
+          center: {lat: {{lat}}, lng: {{lng}}}
+        });
+        setMarkers(map);
+    }
+
+    $.ajax({
+        url : 'location/',
+        type : 'GET',
+        data : {
+            'school' : school.id
+        },
+        dataType : 'json',
+        success:function(data){
+            var data = data
+        }
+    }
+    )
+
+    function setMarkers(map){
+        $.each(data,function(key,value)){
+            var marker = new google.maps.Marker({
+            animation: google.maps.Animation.DROP,
+            draggable: true,
+            map: map,
+            title: key,
+            position:{lat:value[1], lng:value[0]},
+            });
+        }
+    }
+
 
 $(document).ready(function(){
     $('.meal').click(function(){
@@ -81,8 +121,5 @@ $(document).ready(function(){
          });
     });
 </script>
-{% endblock %}
-
-{% block content %}
 
 {% endblock %}

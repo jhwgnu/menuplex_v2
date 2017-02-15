@@ -155,10 +155,10 @@ def history(request,shortname):
 
 
 def bool(request,shortname):
-    bool = request.POST['bool']
+    bools = request.POST['bool']
     meal_pk = request.POST['meal_pk']
 
-    if bool == "false":
+    if bools == "false":
         Meal.objects.filter(id=meal_pk).update(soldout=False)
     else:
         Meal.objects.filter(id=meal_pk).update(soldout=True)
@@ -203,3 +203,15 @@ def message(request):
             "buttons" : ["서울대", "고려대", "한양대"]
             }
             })
+
+def location(request):
+    school_pk = request.GET['school']
+    school = School.objects.get(pk = school_pk)
+
+    result = {}
+    for i in Restaurant.objects.filter(school = school):
+        result[i.name] = i.lnglat.split(',')
+
+    return JsonResponse(result)
+
+
