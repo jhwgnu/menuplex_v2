@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     'django_extensions',
     # 'django_crontab',
     'debug_toolbar',
+    'mapwidgets',
     #local APPS
     'food',
     'accounts'
@@ -58,6 +59,15 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
+
+MAP_WIDGETS = {
+"GooglePointFieldWidget": (
+("zoom", 15),
+("mapCenterLocationName", "london"),
+),
+"GOOGLE_MAP_API_KEY": "AIzaSyDJG-bVA-9JCqT9FVFoYz5OWRfRr0g9LhQ"
+}
+
 
 ROOT_URLCONF = 'menuplex_Ver_sj.urls'
 

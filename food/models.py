@@ -13,6 +13,11 @@ TIME_CHOICES = (
     ('lunch'  , '중식'),
     ('dinner' , '석식'),
 )
+## 유효성 검사
+def lnglat_validator(value):
+    if not re.match(r'^([+-]?\d+\.?\d*),([+-]?\d+\.?\d*)$', value):
+        raise ValidationError('Invalid LngLat Type')
+
 
 
 #날짜를 기준으로 동일 날짜에 한번 연산을 햇으면
@@ -47,6 +52,8 @@ class School(models.Model):
     school_url = models.URLField(max_length=200)
     shortname = models.CharField(max_length=10)
     logo = models.ImageField()
+    lnglat = models.CharField(max_length=50, blank=True,
+            validators=[lnglat_validator])
 
     def __str__(self):
         return self.name
@@ -77,16 +84,12 @@ class School(models.Model):
         return "" + name + "\n-----------------------\n" + Restaurant.kakaotalk_rest_list(school)
 
 
-def lnglat_validator(value):
-    if not re.match(r'^([+-]?\d+\.?\d*),([+-]?\d+\.?\d*)$', value):
-        raise ValidationError('Invalid LngLat Type')
-
-
-
 class Restaurant(models.Model):
     school = models.ForeignKey(School,on_delete =models.CASCADE)
     name = models.CharField(max_length=100)
     location = models.CharField(max_length=100)
+    lnglat = models.CharField(max_length=50, blank=True,
+        validators=[lnglat_validator])
 
     def __str__(self):
         return self.name
@@ -454,8 +457,6 @@ class Map(models.Model):
     rest_name = models.ForeignKey(Restaurant)
     # 학교랑 관련된 식당만 받으려고 삽질하다가 실패! ㅎㅎㅎㅎㅎ
     # rest_name = Restaurant.objects.filter(school=school)
-    lnglat = models.CharField(max_length=50, blank=True,
-            validators=[lnglat_validator])
 
 class Mealcomment(models.Model):
     meal = models.ForeignKey(Meal)
