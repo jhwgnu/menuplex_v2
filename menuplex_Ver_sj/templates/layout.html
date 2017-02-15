@@ -54,7 +54,7 @@
                     <li class="page-scroll"><a href="{% url "login" %}?next={{ request.path }}"><h3>Login</h3></a></li>
                     {% else %}
 
-                    <li class="page-scroll"><a href="profile.html" data-target="#Modal" class="portfolio-link" data-toggle="modal"><h3>Profile</h3></a></li>
+                    <li class="page-scroll"><a data-target="#Modal" class="portfolio-link" data-toggle="modal"><h3>Profile</h3></a></li>
                     <!-- <li class="page-scroll"><a href="#portfolioModal1" class="portfolio-link" data-toggle="modal"><h3>Profile</h3></a></li> -->
                     <!-- <li class="page-scroll"><a href="{% url "profile" %}"><h3>Profile</h3></a></li> -->
                     <li class="page-scroll"><a href="{% url "logout" %}?next={{ request.path }}"><h3>Logout</h3></a></li>
