@@ -42,7 +42,6 @@ INSTALLED_APPS = (
     'django_extensions',
     # 'django_crontab',
     'debug_toolbar',
-        #local APPS
     'food',
     'accounts'
 )
