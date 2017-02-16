@@ -12,20 +12,26 @@
 
     <title>Babio</title>
 
-    <link href="{% static  "css/bootstrap.min.css" %}" rel="stylesheet">
+    <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
 
-    <link href="{% static  "css/freelancer.min.css" %}" rel="stylesheet">
+    <link href="{% static "css/freelancer.min.css" %}" rel="stylesheet">
 
     <!-- <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+<<<<<<< HEAD
     <link href="{% static "vendor/font-awesome/css/font-awesome.min.css"%}"  rel="stylesheet" type="text/css">
+=======
+    <link href="{% static "vendor/font-awesome/css/font-awesome.min.css" %}" rel="stylesheet" type="text/css">
+>>>>>>> 2f7847e719d13b4ebb558b54939cd6169487101e
 
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
 
+    {% block extra_head %}
+    {% endblock %}
 </head>
 
 <body id="page-top" class="index">
-
+    <div id="includedContent"></div>
     <!-- Navigation -->
     <nav id="mainNav" class="navbar navbar-default navbar-fixed-top navbar-custom">
         <div class="container">
@@ -51,8 +57,10 @@
                     <li class="page-scroll"><a href="{% url "signup" %}"><h3>Sign in</h3></a></li>
                     <li class="page-scroll"><a href="{% url "login" %}?next={{ request.path }}"><h3>Login</h3></a></li>
                     {% else %}
+
+                    <li class="page-scroll"><a data-target="#Modal" class="portfolio-link" data-toggle="modal"><h3>Profile</h3></a></li>
                     <!-- <li class="page-scroll"><a href="#portfolioModal1" class="portfolio-link" data-toggle="modal"><h3>Profile</h3></a></li> -->
-                    <li class="page-scroll"><a href="{% url "profile" %}"><h3>Profile</h3></a></li>
+                    <!-- <li class="page-scroll"><a href="{% url "profile" %}"><h3>Profile</h3></a></li> -->
                     <li class="page-scroll"><a href="{% url "logout" %}?next={{ request.path }}"><h3>Logout</h3></a></li>
                     {% endif %}
                     <!-- <li class="page-scroll"><img id="kakao-login" src="{{ MEDIA_URL }}/kakao_login_btn_small.png"></li> -->
@@ -61,18 +69,15 @@
         </div>
     </nav>
 
-
-    <!-- Portfolio Grid Section -->
     </br></br></br></br></br>
 {% block map %}
 {% endblock %}
-    <section id="portfolio" style="background-color:#18BC9C">
+    <section id="portfolio" style="background-color:#FFFFFE">
 {% block content %}
 {% endblock %}
     </section>
 
 
-    <!-- Scroll to Top Button (Only visible on small and extra-small screen sizes) -->
     <div class="scroll-top page-scroll hidden-sm hidden-xs hidden-lg hidden-md">
         <a class="btn btn-primary" href="#page-top">
             <i class="fa fa-chevron-up"></i>
@@ -80,23 +85,24 @@
     </div>
 
     <!-- Modal -->
-    <!-- <div class="portfolio-modal modal fade" id="portfolioModal1" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-            <div class="close-modal" data-dismiss="modal" style="background-color:#1B1189">
-                <div class="lr">
-                    <div class="rl">
-                    </div>
-                </div>
+    <div class="portfolio-modal modal fade" id="Modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content modal-sm">
+            <div class="modal-header" style="color:#FFFFFE">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+              <h4 class="modal-title" id="myModalLabel" style="color:#000000">My Profile</h4>
             </div>
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2">
-                        <div class="modal-body">
+                        <div class="modal-body modal-sm" style="text-align:left">
+                                <div class="info">
 
-                                아이디 : {{ user }}</br>
-                                닉네임 : {{ user.profile.nickname }}</br>
-                                가입일 : {{ user.date_joined }}</br></br>
+                                  <strong>아이디</strong>  {{ user }}</br>
+                                  <strong>닉네임</strong>  {{ user.profile.nickname }}</br>
+                                  <strong>가입일</strong>  {{ user.date_joined }}</br></br></br>
 
+                                </div>
+
+                                <div class="mycomments">
                                 내가 남긴 댓글</br>
                                 {% for comment in user.comment_set.all %}
                                     {{ comment.message }}
@@ -124,13 +130,14 @@
                                     {% endif %}
                                 {% endfor %}
                                 {% endfor %}
-                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                              </div>
+                            <!-- <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button> -->
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div> -->
+    </div>
 
 
     <!-- jQuery -->

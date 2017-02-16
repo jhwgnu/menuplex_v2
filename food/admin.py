@@ -1,11 +1,12 @@
 from django.contrib import admin
+
 from food.models import School,Restaurant,Meal,Comment,Mealcomment
 
 ## admin 페이지에 크롤링 버튼을 만들고자 함
 ## 방법을 아직 모르겠음.
 
 class SchoolAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'school_url','center']
+    list_display = ['id', 'name', 'school_url']
     list_display_links = ['id','name']
     search_fields = ['name']
     actions = ['crawl']
@@ -15,7 +16,6 @@ class SchoolAdmin(admin.ModelAdmin):
         self.message_user(request, '수행!!')
         pass
     crawl.short_description = '지정 학교를 크롤링합니다.'
-
 
 class RestaurantAdmin(admin.ModelAdmin):
     list_display = ['id','name','location','school','lnglat']
@@ -46,3 +46,4 @@ admin.site.register(Restaurant,RestaurantAdmin)
 admin.site.register(Meal, MealAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Mealcomment)
+

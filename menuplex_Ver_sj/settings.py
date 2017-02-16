@@ -42,7 +42,6 @@ INSTALLED_APPS = (
     'django_extensions',
     # 'django_crontab',
     'debug_toolbar',
-    #local APPS
     'food',
     'accounts'
 )
@@ -58,6 +57,15 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
+
+MAP_WIDGETS = {
+"GooglePointFieldWidget": (
+("zoom", 15),
+("mapCenterLocationName", "london"),
+),
+"GOOGLE_MAP_API_KEY": "AIzaSyDJG-bVA-9JCqT9FVFoYz5OWRfRr0g9LhQ"
+}
+
 
 ROOT_URLCONF = 'menuplex_Ver_sj.urls'
 
@@ -114,7 +122,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'menuplex_Ver_sj','static'),
 ]
 
-STATIC_ROOT = os.path.join(BASE_DIR, '..', 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, '', 'staticfiles')
 
 CRONJOBS = [
     ('0 1 * * *','food.cron.scheduled_job'),

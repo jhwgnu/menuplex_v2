@@ -17,3 +17,6 @@ tests/coverage_html/
 tests/.coverage
 build/
 tests/report/
+accounts/migrations/
+food/migrations/
+db.sqlite3
