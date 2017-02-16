@@ -14,6 +14,27 @@
 
 <script>
 $(document).ready(function(){
+    $('.map').click(function(){
+        var t = $(this)[0];
+        $ .ajax({
+             url : 'location/',
+            type : 'GET',
+            data : {'restaurant': t.id},
+            success:function(data){
+                alert(data['lat'])
+                function setMarkers(map){
+                   var marker = new google.maps.Marker({
+                    animation: google.maps.Animation.DROP,
+                    draggable: true,
+                    map: map,
+                    title: t.id,
+                    position:{lat: data['lat'], lng:data['lng']},
+                    });
+                }
+            }
+        })
+    })
+
     $('.meal').click(function(){
         var t = $(this)[0];
         var tstr = 'target' + t.id;
