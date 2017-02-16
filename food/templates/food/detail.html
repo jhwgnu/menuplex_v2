@@ -3,7 +3,6 @@
 Menuplex
 {% endblock %}
 {% block map %}
-
 <style>
    #map {
     height: 350px;
@@ -17,68 +16,49 @@ Menuplex
           zoom: 14,
           center: {lat: {{lat}}, lng: {{lng}}}
         });
-        setMarkers(map);
+
     }
 
-
-        // var restaurants=[
-
-        // ];
-
-    function setMarkers(map){
-        map:map
-    //   for (var i = 0; i < restaurants.length; i++) {
-    //     var restaurant = restaurants[i];
-    //     var marker = new google.maps.Marker({
-    //     animation: google.maps.Animation.DROP,
-    //     draggable: true,
-    //     map: map,
-    //     title:restaurant[0],
-    //     position:{lat:restaurant[1], lng:restaurant[2]},
-    //     });
-
-    // }
-}
 
 </script>
 <script async defer
 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJG-bVA-9JCqT9FVFoYz5OWRfRr0g9LhQ&callback=initMap">
 </script>
+
 {% endblock %}
 {% block content %}
 <div class="container" style="display: inline-block">
-  <h1><strong>{{school.name}}학교</strong></h1></br>
 <div class="row">
     {% if restaurant_dict %}
+    <ul>
     {% for restaurant in restaurant_dict %}
     <div class="col-md-4" style="display:inline-block;">
         <div class="panel panel-default">
             <div class="panel-heading" style="border-style: solid">
                 <h4><i class="fa fa-fw fa-check"></i><a href="{% url 'restaurant' school.shortname restaurant.0 %}" style="color:#1B1189">{{restaurant.0}}</a>
-                <a href="#" class="btn btn-default">Map</a></h4>
+                <button type="button" class = "map" id = "{{restaurant.0}}">MAP</button>
+                </h4>
             </div>
-            <div class="panel-body" style="border-style: solid; border-color:#E5E5E5">
+            <div class="panel-body" style="border-style: solid;
+            border-color:#E5E5E5">
             {% for meals in restaurant.1 %}
-                <div class="col-md-6">
                 <h4><strong>{{meals.0}}</strong></h4>
                 {% for meal  in meals.1 %}
                 <div class = 'meal' id='{{meal.id}}'>
                     {% if meal.soldout == False %}
-                        <span id = "span{{ meal.id }}">
-                          <a href="{% url 'meal_comment' meal.school.shortname meal.restaurant.name meal.id  %}" style="color:#000000">{{meal}}</a></span>
-                          <!-- <a data-target="#Modal" class="portfolio-link" data-toggle="CommentModal" style="color:#000000">{{meal}}</a></span> -->
+                        <span id = "span{{ meal.id }}">{{meal}}</span>
                     {% else %}
-                        <span id = "span{{ meal.id }}" style="text-decoration:line-through">
-                          <a href="{% url 'meal_comment' meal.school.shortname meal.restaurant.name meal.id  %}" style="color:#000000">{{meal}}</a></span>
+                        <span id = "span{{ meal.id }}" style="text-decoration:line-through">{{meal}}</span>
                     {% endif %}
                 </div>
                     <div class = "soldout" id="soldout{{ meal.id }}" >
                         <input type="checkbox" data-toggle="toggle" id="toggle{{meal.id}}" data-size="mini" data-on="판매중" data-off="매진">
 
                     </div>
-                    <!-- <button type="button" onclick="location.href='{% url 'meal_comment' meal.school.shortname meal.restaurant.name meal.id  %}'">댓글</button> -->
+                    <button type="button" onclick="location.href='{% url 'meal_comment' meal.school.shortname meal.restaurant.name meal.id  %}'">댓글</button>
+                            </br></br>
                   {% endfor %}
-                </div>
+            </li>
             {% endfor %}
             </div>
         </div>
@@ -87,55 +67,5 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJG-bVA-9JCqT9FVFoYz5OWRf
     {% endfor %}
   </ul>
     {% endif %}
-
-    <div id="CommentModal" class="modal fade text-center">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">X</button>
-            <h1>My Profile</h1>
-          </div>
-          <div class="modal-body">
-            <div class="panel panel-default">
-              <div class="panel-heading text-center">
-                Employee Information
-              </div>
-              <div class="panel-body">
-                 <div class="row">
-                   <div class="text-right col-xs-2">Title:</div>
-                   <div class="text-left col-xs-3" id="title"></div>
-                   <div class="text-right col-xs-2">First:</div>
-                   <div class="text-left col-xs-3" id="firstname"></div>
-                 </div>
-                 <div class="row">
-                   <div class="text-right col-xs-2">Phone#</div>
-                   <div class="text-left col-xs-3" id="phone"></div>
-                   <div class="text-right col-xs-2">Email</div>
-                   <div class="text-left col-xs-3" id="email"></div>
-                 </div>
-                 <div class="row">
-                   <div class="text-right col-xs-2">Dept:</div>
-                   <div class="text-left col-xs-3" id="departmentname"></div>
-                   <div class="text-left col-xs-2">Surname:</div>
-                   <div class="text-left col-xs-4">
-                     <input type="text" placeholder="enter last name" id="TextBoxLastName" class="form-control" />
-                   </div>
-                 </div>
-               </div>
-             </div>
-            <div class="modal-footer">
-              <div class="panel-footer">
-                <input type="button" value="Find Employee" id="empbutton" />
-                <div class="col-xs-10" id="lblstatus"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-
-
 </div>
 {% endblock %}

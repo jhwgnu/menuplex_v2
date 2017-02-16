@@ -203,3 +203,14 @@ def message(request):
             "buttons" : ["서울대", "고려대", "한양대"]
             }
             })
+
+
+def location(request,shortname):
+    name = request.GET['restaurant']
+    restaurant = Restaurant.objects.get(name = name)
+    lnglat = restaurant.lnglat.split(',')
+
+    return JsonResponse({
+        'lng' : lnglat[1],
+        'lat' : lnglat[0]
+        })
