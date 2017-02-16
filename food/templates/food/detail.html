@@ -3,6 +3,7 @@
 Menuplex
 {% endblock %}
 {% block map %}
+
 <style>
    #map {
     height: 350px;
@@ -16,49 +17,70 @@ Menuplex
           zoom: 14,
           center: {lat: {{lat}}, lng: {{lng}}}
         });
-
+        setMarkers(map);
     }
 
+
+        // var restaurants=[
+
+        // ];
+
+    function setMarkers(map){
+        map:map
+    //   for (var i = 0; i < restaurants.length; i++) {
+    //     var restaurant = restaurants[i];
+    //     var marker = new google.maps.Marker({
+    //     animation: google.maps.Animation.DROP,
+    //     draggable: true,
+    //     map: map,
+    //     title:restaurant[0],
+    //     position:{lat:restaurant[1], lng:restaurant[2]},
+    //     });
+
+    // }
+}
 
 </script>
 <script async defer
 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJG-bVA-9JCqT9FVFoYz5OWRfRr0g9LhQ&callback=initMap">
 </script>
-
 {% endblock %}
 {% block content %}
 <div class="container" style="display: inline-block">
+  <h1><strong>{{school.name}}학교</strong></h1></br>
 <div class="row">
     {% if restaurant_dict %}
-    <ul>
     {% for restaurant in restaurant_dict %}
     <div class="col-md-4" style="display:inline-block;">
         <div class="panel panel-default">
             <div class="panel-heading" style="border-style: solid">
                 <h4><i class="fa fa-fw fa-check"></i><a href="{% url 'restaurant' school.shortname restaurant.0 %}" style="color:#1B1189">{{restaurant.0}}</a>
-                <button type="button" class = "map" id = "{{restaurant.0}}">MAP</button>
-                </h4>
+                <a href="#" class="btn btn-default">Map</a></h4>
             </div>
-            <div class="panel-body" style="border-style: solid;
-            border-color:#E5E5E5">
+            <div class="panel-body" style="border-style: solid; border-color:#E5E5E5">
             {% for meals in restaurant.1 %}
+                <div class="col-md-6">
                 <h4><strong>{{meals.0}}</strong></h4>
                 {% for meal  in meals.1 %}
                 <div class = 'meal' id='{{meal.id}}'>
                     {% if meal.soldout == False %}
-                        <span id = "span{{ meal.id }}">{{meal}}</span>
+                        <span id = "span{{ meal.id }}">
+                          <a href="{% url 'meal_comment' meal.school.shortname meal.restaurant.name meal.id  %}" style="color:#000000">{{meal}}</a></span>
+                          <!-- <a href="#CommentModal" class="portfolio-link" data-toggle="modal" style="color:#000000">{{meal}}</a></span> -->
                     {% else %}
-                        <span id = "span{{ meal.id }}" style="text-decoration:line-through">{{meal}}</span>
+                        <span id = "span{{ meal.id }}" style="text-decoration:line-through">
+                          <a href="{% url 'meal_comment' meal.school.shortname meal.restaurant.name meal.id  %}" style="color:#000000">{{meal}}</a></span>
                     {% endif %}
                 </div>
                     <div class = "soldout" id="soldout{{ meal.id }}" >
                         <input type="checkbox" data-toggle="toggle" id="toggle{{meal.id}}" data-size="mini" data-on="판매중" data-off="매진">
 
                     </div>
-                    <button type="button" onclick="location.href='{% url 'meal_comment' meal.school.shortname meal.restaurant.name meal.id  %}'">댓글</button>
-                            </br></br>
+                    </br>
+                    <button type="button" onclick="location.href='{% url 'meal_comment' meal.school.shortname meal.restaurant.name meal.id  %}'">댓글
+                    </button>
                   {% endfor %}
-            </li>
+                </div>
             {% endfor %}
             </div>
         </div>
@@ -68,4 +90,6 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJG-bVA-9JCqT9FVFoYz5OWRf
   </ul>
     {% endif %}
 </div>
+</div>
+
 {% endblock %}

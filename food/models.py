@@ -59,6 +59,9 @@ class School(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ['name']
+
     # views.py에서 레스토랑의 이름 - 시간 - 식사 이름 을 출력해주는 창.
     @classmethod
     @memoize
