@@ -204,6 +204,7 @@ def message(request):
             }
             })
 
+<<<<<<< HEAD
 def location(request):
     school_pk = request.GET['school']
     school = School.objects.get(pk = school_pk)
@@ -215,3 +216,15 @@ def location(request):
     return JsonResponse(result)
 
 
+=======
+
+def location(request,shortname):
+    name = request.GET['restaurant']
+    restaurant = Restaurant.objects.get(name = name)
+    lnglat = restaurant.lnglat.split(',')
+
+    return JsonResponse({
+        'lng' : lnglat[1],
+        'lat' : lnglat[0]
+        })
+>>>>>>> 2d07b8937682b69189ef05d8ef2d6c0a0226148a

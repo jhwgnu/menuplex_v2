@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^location',views.location, name="location"),
     url(r'^(?P<shortname>[a-z]+)/$', views.detail,name='detail'),
     url(r'^(?P<shortname>[a-z]+)/history/$',views.history,name='history'),
+    url(r'^(?P<shortname>[a-z]+)/location/',views.location,name="location"),
     url(r'^(?P<shortname>[a-z]+)/bool/$',views.bool,name='bool'),
     url(r'^(?P<shortname>[a-z]+)/(?P<restaurant_name>[^/]*)/$',views.restaurant_detail,name='restaurant'),
     url(r'^(?P<shortname>[a-z]+)/(?P<restaurant_name>[^/]*)/comments/(?P<pk>\d+)/edit/$', views.comment_edit, name='comment_edit'),

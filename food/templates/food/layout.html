@@ -57,6 +57,27 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJG-bVA-9JCqT9FVFoYz5OWRf
 <script>
 >>>>>>> 2f7847e719d13b4ebb558b54939cd6169487101e
 $(document).ready(function(){
+    $('.map').click(function(){
+        var t = $(this)[0];
+        $ .ajax({
+             url : 'location/',
+            type : 'GET',
+            data : {'restaurant': t.id},
+            success:function(data){
+                alert(data['lat'])
+                function setMarkers(map){
+                   var marker = new google.maps.Marker({
+                    animation: google.maps.Animation.DROP,
+                    draggable: true,
+                    map: map,
+                    title: t.id,
+                    position:{lat: data['lat'], lng:data['lng']},
+                    });
+                }
+            }
+        })
+    })
+
     $('.meal').click(function(){
         var t = $(this)[0];
         var tstr = 'target' + t.id;
